@@ -1,0 +1,68 @@
+
+migrate project to git
+disable account system, make it a seamless login
+create libs dir and migrate dependencies to it
+install pydispatch
+
+
+------------ *Possible refactoring* existing modules' methods into
+smaller methods @move account sql session into account @move database
+creation into account @make sure only modules using orm include
+SQLAlchemy modules refactor CmdRouter::tick refactor cmdhandler/parser
+stuff into a connectionContollerish entity resolve dependencies
+between LogonSequence/state functions/parsers/etc LogonSequence does
+too much, it should have send/logon/ConCtrler Encapsulate password
+requirements?  encapsulate password attempts unit tests for all
+existing code
+
+
+
+*As a user I can login with a permanent account*
+@account system accepts valid username and password
+@account system has logon_func and calls logon( self, account.id )
+cmd_router overwrites sql_session with game sql_session in logon()
+@logon() stubs "you are now logged in:)"
+switch mob id to instanceId, add id (perm id)
+add shortname to mob
+SQLAlchemyify mob
+add create_database to mob.py
+create account_character_list.py
+add AccountCharacters table to account_character_list.py
+logon() calls account_character_list.py func with logon_seq and account_id
+
+
+*As a user I can see a list of characters associated with my account*
+user sees menu of existing characters
+user sees (No characters) if they have no characters
+
+
+*As a user I can create a new character associated with my account*
+user can hit 1 to begin creating a new character
+
+
+
+
+
+
+    
+
+
+
+
+
+
+*As a user I can create a permanent account*
+@hook logon sequence up to alchemy db
+@write function to check for accout name collision
+@create new account object when creating a new account
+@user can input new account name, populates account object
+@account name can be rejected (only alphanumeric)
+@account name can be rejected (account name exists)
+@user can input account password
+@account gets committed to db
+@account password can be rejected (no whitespace)
+
+
+
+
+

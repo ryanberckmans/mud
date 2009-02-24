@@ -1,0 +1,1 @@
+find . | egrep "cpp$|h$|hpp$|py$|java$|js$" | xargs etags --members -o ~/TAGS
