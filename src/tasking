@@ -1,7 +1,5 @@
 
-migrate project to git
 disable account system, make it a seamless login
-create libs dir and migrate dependencies to it
 install pydispatch
 
 
