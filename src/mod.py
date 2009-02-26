@@ -10,7 +10,7 @@ def initMods():
     mods = util.import_libs("./mods-enabled")
 
     for mod in mods:
-        mod.init()
+        mod.mod.init()
 
 
 def parser():
