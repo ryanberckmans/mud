@@ -5,7 +5,7 @@ import parser
 
 class Client:
 
-    def __init__( self, sendFunc ):
+    def __init__( self, sendFunc, defaultParser = None ):
         assert type(sendFunc) == FunctionType, "Client.init received sendFunc that wasn't a function"
         
         self.cmds = []
@@ -13,6 +13,9 @@ class Client:
         self.send = sendFunc
         
         self.defaultCmdCallback = lambda player, cmd: player.send("The command '%s' was not recognized.\n" % cmd )
+
+        if defaultParser:
+            self.appendParser( defaultParser )
 
 
     ### Prompt ###
@@ -88,4 +91,10 @@ class Client:
                 n -= 1
         except IndexError:
             self.parsersStack.append( [] ) # re-append the empty list of parsers
+
+### end Client ###
+
+
+
+
 

@@ -1,9 +1,11 @@
 from client import Client
+import mod
 
 class CmdRouter:
 
     def __init__(self):
         self.idMap = {}
+        mod.initMods()
 
 
     def tick( self, new_cons, lost_link, flushed, cmds, msgs):
@@ -32,7 +34,7 @@ class CmdRouter:
                     msgs[con] = msg
 
 
-            self.idMap[con] = Client( send )
+            self.idMap[con] = Client( send, mod.parser() )
 
         print "after new"
         print str(self.idMap)
