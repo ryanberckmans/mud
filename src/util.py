@@ -1,11 +1,11 @@
 import string
-
+import re
 
 # returns true if str contains only alphanumeric + underscore
+
+isAlphanumericExp = re.compile('.*\W.*')
 def is_alphanumeric( str ):
-    import re
-    exp = re.compile('.*\W.*')
-    return exp.match( str ) == None
+    return isAlphanumericExp.match( str ) == None
 
 
 # returns the first token delimited by a space or a tab
