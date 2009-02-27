@@ -5,12 +5,13 @@ from parser import Parser
 
 modTrie = TrieNode()
 
-def initMods():
+def init():
 
-    mods = util.import_libs("./mods-enabled")
+    mods = util.ls("./mods-enabled")
 
     for mod in mods:
-        mod.mod.init()
+        __import__(mod)
+        print "imported mod %s" % mod
 
 
 def parser():

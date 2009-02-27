@@ -1,5 +1,7 @@
 import string
 import re
+import os, sys, inspect
+
 
 # returns true if str contains only alphanumeric + underscore
 
@@ -52,6 +54,13 @@ def tokenize( str ):
     return tokens
 
 
+########################
+# list contents of dir
+########################
+
+def ls( dir ):
+    return os.listdir(os.path.abspath(dir))
+    
 
 ########################
 # dynamic module loader
@@ -72,8 +81,6 @@ about those modules.
 Copyright 2005 Jesse Noller <jnoller@gmail.com>
 
 """
-
-import os, sys, inspect
 
 def import_libs(dir):
     """ Imports the libs, returns a list of the libraries. 

@@ -5,7 +5,7 @@ class CmdRouter:
 
     def __init__(self):
         self.idMap = {}
-        mod.initMods()
+        mod.init()
 
 
     def tick( self, new_cons, lost_link, flushed, cmds, msgs):
