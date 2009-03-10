@@ -1,8 +1,6 @@
 import unittest
 
-import trienode
-
-
+import trie
 
 def a():
     return "a"
@@ -14,10 +12,10 @@ def c():
     return "c"
 
 
-class TestTrieNode(unittest.TestCase):
+class TestTrie(unittest.TestCase):
     
     def setUp(self):
-        self.node = trienode.TrieNode()
+        self.node = trie.Trie()
 
     def testrepr(self):
         self.assertEqual(str(self.node), "")

@@ -1,18 +1,28 @@
 #!/usr/bin/env python
 
-import unittest
+def loadTestModules():
+    import os
+    import unittests
 
-from util import import_libs
+    modules = []
+
+    for f in os.listdir(os.path.abspath(unittests.__path__[0])):
+        module, ext = os.path.splitext(f) # Handles no-extension files, etc.      
+        if ext == '.py': # Important, ignore .pyc/other files.
+            print 'imported module: %s' % (module)
+            modules.append(__import__(module))
+
+    return modules
+
 
 if __name__ == '__main__':
+    import unittest
 
     print "\nLOADING TESTS...\n"
 
-    all_tests = []
+    modules = loadTestModules()
     
-    tests = import_libs("./unittests")
-
-    for module in tests:
+    for module in modules:
         for name in dir(module):
             obj = getattr(module, name)
             if inspect.isclass(obj):
@@ -21,8 +31,6 @@ if __name__ == '__main__':
 
     print "\nRUNNING TESTS...\n"
 
-    # Convert the list of tests into a suite
-    #mud_suite = unittest.TestSuite(all_tests)
-    
     unittest.TextTestRunner(verbosity=2).run(unittest.TestSuite(all_tests))
     
+
