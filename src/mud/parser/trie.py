@@ -4,6 +4,8 @@ import util
 from exceptions import Match, NoMatch
 
 
+# new name CmdMap ?
+# could call "parser" CmdContext
 class Trie:
 
     def __init__(self):
