@@ -17,13 +17,13 @@ class Trie:
     # no_abbrev==true specifies no partial matches permitted
     def add( self, cmd, callback, no_abbrev = False ):
 
-        assert type(cmd) == StringType, "TrieNode.add received cmd that wasn't a string"
-        assert type(callback) == FunctionType, "TrieNode.add received callback that wasn't a function"
-        assert type(no_abbrev) == BooleanType, "TrieNode.add received no_abbrev that wasn't a bool"
+        assert type(cmd) == StringType, "Trie.add received cmd that wasn't a string"
+        assert type(callback) == FunctionType, "Trie.add received callback that wasn't a function"
+        assert type(no_abbrev) == BooleanType, "Trie.add received no_abbrev that wasn't a bool"
 
         (first, cmd) = util.first_token( cmd )
 
-        assert len(first) > 0, "TrieNode.add received first from util.first_token with length 0"
+        assert len(first) > 0, "Trie.add received first from util.first_token with length 0"
 
         node = self
 
@@ -31,7 +31,7 @@ class Trie:
              #print "next char: ", next_char
 
              if next_char not in node.possible_next:
-                 node.possible_next[ next_char ] = TrieNode()
+                 node.possible_next[ next_char ] = Trie()
                  #print "adding callback", callback
                  node.possible_next[ next_char ].callback = callback
                  node.possible_next[ next_char ].no_abbrev = no_abbrev
@@ -43,7 +43,7 @@ class Trie:
              if len(cmd) > 0:
                  #print "should add next token node"
                  if not node.possible_next[ next_char ].next_token_node:
-                     node.possible_next[ next_char ].next_token_node = TrieNode()
+                     node.possible_next[ next_char ].next_token_node = Trie()
 
                  node.possible_next[ next_char ].next_token_node.add( cmd, callback, no_abbrev )
 
@@ -61,7 +61,7 @@ class Trie:
 
          #print " match started!"
 
-         assert type(cmd) == StringType, "TrieNode.match received a cmd that wasn't a string"
+         assert type(cmd) == StringType, "Trie.match received a cmd that wasn't a string"
 
          if len(cmd) == 0:
              raise NoMatch
@@ -71,7 +71,7 @@ class Trie:
          #print " match with first=", first
          #print " cmd=", cmd
 
-         assert len(first) > 0, "TrieNode.match received a first of length 0 from util.first_token"
+         assert len(first) > 0, "Trie.match received a first of length 0 from util.first_token"
 
          node = self
 
@@ -109,14 +109,14 @@ class Trie:
     # @todo add no_abbrev and callback data to str
     #       without breaking unit tests
     def __str__helper(self, prefix=""):
-        #print "toString on TrieNode id %i with prefix %sEND" % (id(self), prefix)
+        #print "toString on Trie id %i with prefix %sEND" % (id(self), prefix)
         toReturn = ""
 
         for char in self.possible_next:
             toReturn += prefix + char + "\n"
         
         if self.next_token_node:
-            assert len(prefix) > 0, "trienode.__str__ len(prefix) == 0 (no chars matched) but a next_token_node exists"
+            assert len(prefix) > 0, "trie.__str__ len(prefix) == 0 (no chars matched) but a next_token_node exists"
             toReturn += self.next_token_node.__str__helper( prefix + " " )
         else:
             #print "next_token_node null for prefix %s" % prefix
