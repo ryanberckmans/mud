@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-
 def loadTestModules():
-    import os
     import mud
 
     modules = []
@@ -13,13 +11,14 @@ def loadTestModules():
             module, ext = os.path.splitext(f) # Handles no-extension files, etc.      
             if ext == '.py' and module != '__init__': # Important, ignore .pyc/other files.
                 print 'imported module: mud.%s.unittests.%s' % (pkgName, module)
-                modules.append(__import__("mud.%s.unittests.%s" % (pkgName,module) ) )
+                __import__("mud.%s.unittests.%s" % (pkgName,module) )
+                modules.append( getattr( getattr( getattr(mud, pkgName), 'unittests'), module ) )
 
     return modules
 
 
 if __name__ == '__main__':
-    import unittest
+    import inspect, os, unittest
 
     print "\nLOADING TESTS...\n"
 

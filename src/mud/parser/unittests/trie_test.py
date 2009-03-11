@@ -1,6 +1,7 @@
 import unittest
 
-import trie
+from .. import trie
+#from ..exceptions import Match, NoMatch
 
 def a():
     return "a"
