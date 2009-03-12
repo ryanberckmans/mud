@@ -1,60 +1,64 @@
-from types import *
-import util
+from types import StringType, FunctionType, BooleanType
 
+import util
 from exceptions import Match, NoMatch
 
-
-# new name CmdMap ?
 # could call "parser" CmdContext
-class Trie:
+class CmdMap:
 
     def __init__(self):
-        self.possible_next = {}
+        self.possibleNext = {}
         self.callback = None
-        self.next_token_node = None
-        self.no_abbrev = False
+        self.nextTokenNode = None
+        self.abbrev = True
+
+    def addCmd(self, cmd, callback, abbrev = True ):
+        addCmdCheckPreconds( cmd, callback, abbrev)
+        addCmdFromNextToken( self, cmd, callback, abbrev )
+        return self
+
 
     # string cmd
     # callback is the function corresponding to the match
-    # no_abbrev==true specifies no partial matches permitted
-    def add( self, cmd, callback, no_abbrev = False ):
+    # noAbbrev==true specifies no partial matches permitted
+    def add( self, cmd, callback, noAbbrev = False ):
 
-        assert type(cmd) == StringType, "Trie.add received cmd that wasn't a string"
-        assert type(callback) == FunctionType, "Trie.add received callback that wasn't a function"
-        assert type(no_abbrev) == BooleanType, "Trie.add received no_abbrev that wasn't a bool"
+        assert type(cmd) == StringType, "CmdMap.add received cmd that wasn't a string"
+        assert type(callback) == FunctionType, "CmdMap.add received callback that wasn't a function"
+        assert type(noAbbrev) == BooleanType, "CmdMap.add received noAbbrev that wasn't a bool"
 
         (first, cmd) = util.first_token( cmd )
 
-        assert len(first) > 0, "Trie.add received first from util.first_token with length 0"
+        assert len(first) > 0, "CmdMap.add received first from util.first_token with length 0"
 
         node = self
 
-        for next_char in first:
-             #print "next char: ", next_char
+        for nextChar in first:
+             #print "next char: ", nextChar
 
-             if next_char not in node.possible_next:
-                 node.possible_next[ next_char ] = Trie()
+             if nextChar not in node.possibleNext:
+                 node.possibleNext[ nextChar ] = CmdMap()
                  #print "adding callback", callback
-                 node.possible_next[ next_char ].callback = callback
-                 node.possible_next[ next_char ].no_abbrev = no_abbrev
+                 node.possibleNext[ nextChar ].callback = callback
+                 node.possibleNext[ nextChar ].noAbbrev = noAbbrev
              else:
-                 if node.possible_next[ next_char ].no_abbrev and not no_abbrev:
-                     node.possible_next[ next_char ].callback = callback
-                     node.possible_next[ next_char ].no_abbrev = False
+                 if node.possibleNext[ nextChar ].noAbbrev and not noAbbrev:
+                     node.possibleNext[ nextChar ].callback = callback
+                     node.possibleNext[ nextChar ].noAbbrev = False
 
              if len(cmd) > 0:
                  #print "should add next token node"
-                 if not node.possible_next[ next_char ].next_token_node:
-                     node.possible_next[ next_char ].next_token_node = Trie()
+                 if not node.possibleNext[ nextChar ].nextTokenNode:
+                     node.possibleNext[ nextChar ].nextTokenNode = CmdMap()
 
-                 node.possible_next[ next_char ].next_token_node.add( cmd, callback, no_abbrev )
+                 node.possibleNext[ nextChar ].nextTokenNode.add( cmd, callback, noAbbrev )
 
-             node = node.possible_next[ next_char ]
+             node = node.possibleNext[ nextChar ]
 
 
 
         if len(cmd) == 0:
-            node.no_abbrev = False
+            node.noAbbrev = False
 
         return self
 
@@ -63,7 +67,7 @@ class Trie:
 
          #print " match started!"
 
-         assert type(cmd) == StringType, "Trie.match received a cmd that wasn't a string"
+         assert type(cmd) == StringType, "CmdMap.match received a cmd that wasn't a string"
 
          if len(cmd) == 0:
              raise NoMatch
@@ -73,20 +77,20 @@ class Trie:
          #print " match with first=", first
          #print " cmd=", cmd
 
-         assert len(first) > 0, "Trie.match received a first of length 0 from util.first_token"
+         assert len(first) > 0, "CmdMap.match received a first of length 0 from util.first_token"
 
          node = self
 
-         for next_char in first:
-             if next_char in node.possible_next:
-                 node = node.possible_next[ next_char ]
+         for nextChar in first:
+             if nextChar in node.possibleNext:
+                 node = node.possibleNext[ nextChar ]
              else:
                  raise NoMatch
 
-             if len(cmd) > 0 and node.next_token_node:
-                 node.next_token_node.match( cmd )
+             if len(cmd) > 0 and node.nextTokenNode:
+                 node.nextTokenNode.match( cmd )
 
-         if node.no_abbrev:
+         if node.noAbbrev:
              raise NoMatch
 
          #print "raising match with callback ", node.callback
@@ -102,30 +106,30 @@ class Trie:
 
 
     def __init__(self):
-        self.possible_next = {}
+        self.possibleNext = {}
         self.callback = None
-        self.next_token_node = None
-        self.no_abbrev = False
+        self.nextTokenNode = None
+        self.noAbbrev = False
 
 
-    # @todo add no_abbrev and callback data to str
+    # @todo add noAbbrev and callback data to str
     #       without breaking unit tests
     def __str__helper(self, prefix=""):
-        #print "toString on Trie id %i with prefix %sEND" % (id(self), prefix)
+        #print "toString on CmdMap id %i with prefix %sEND" % (id(self), prefix)
         toReturn = ""
 
-        for char in self.possible_next:
+        for char in self.possibleNext:
             toReturn += prefix + char + "\n"
         
-        if self.next_token_node:
-            assert len(prefix) > 0, "trie.__str__ len(prefix) == 0 (no chars matched) but a next_token_node exists"
-            toReturn += self.next_token_node.__str__helper( prefix + " " )
+        if self.nextTokenNode:
+            assert len(prefix) > 0, "trie.__str__ len(prefix) == 0 (no chars matched) but a nextTokenNode exists"
+            toReturn += self.nextTokenNode.__str__helper( prefix + " " )
         else:
-            #print "next_token_node null for prefix %s" % prefix
+            #print "nextTokenNode null for prefix %s" % prefix
             pass
 
-        for char in self.possible_next:
-            toReturn += self.possible_next[char].__str__helper( prefix + char )
+        for char in self.possibleNext:
+            toReturn += self.possibleNext[char].__str__helper( prefix + char )
 
         return toReturn
 
@@ -134,3 +138,53 @@ class Trie:
         return self.__str__helper()
 
 
+
+
+
+################################
+###### Internal ###############
+################################
+
+def addCmdCheckPreconds( cmd, callback, abbrev):
+    assert type(cmd) == StringType, "CmdMap.addCmd received cmd that wasn't a string"
+    assert len(cmd) > 0, "CmdMap.addCmd received cmd of length 0"
+    assert type(callback) == FunctionType, "CmdMap.addCmd received callback that wasn't a function"
+    assert type(abbrev) == BooleanType, "CmdMap.addCmd received noAbbrev that wasn't a bool"
+
+
+def addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, abbrev):
+
+    #print "next char: ", nextChar
+    if char not in cmdMap.possibleNext:
+        cmdMap.possibleNext[ char ] = CmdMap()
+        #print "adding callback", callback
+        cmdMap.possibleNext[ char ].callback = callback
+        cmdMap.possibleNext[ char ].abbrev = abbrev
+    else:
+        if not cmdMap.possibleNext[ char ].abbrev and abbrev:
+            cmdMap.possibleNext[ char ].callback = callback
+            cmdMap.possibleNext[ char ].abbrev = True
+
+    if len(cmdRemainingTokens) > 0:
+        #print "should add next token node"
+        if not cmdMap.possibleNext[ char ].nextTokenNode:
+            cmdMap.possibleNext[ char ].nextTokenNode = CmdMap()
+
+        cmdMap.possibleNext[ char ].nextTokenNode.addCmd( cmdRemainingTokens, callback, abbrev )
+
+    return cmdMap.possibleNext[ char ]
+    
+
+def addCmdFromNextToken( cmdMap, cmd, callback, abbrev ):
+
+    (cmdFirstToken, cmdRemainingTokens) = util.first_token(cmd)
+
+    assert len(cmdFirstToken) > 0, "CmdMapInternal.addCmdFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen."
+        
+    for char in cmdFirstToken:
+        cmdMap = addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, abbrev )
+
+    if len(cmdRemainingTokens) == 0:
+        cmdMap.abbrev = True
+            
+ 
