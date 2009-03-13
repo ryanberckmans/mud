@@ -17,51 +17,8 @@ class CmdMap:
         addCmdFromNextToken( self, cmd, callback, abbrev )
         return self
 
-
-    # string cmd
-    # callback is the function corresponding to the match
-    # noAbbrev==true specifies no partial matches permitted
-    def add( self, cmd, callback, noAbbrev = False ):
-
-        assert type(cmd) == StringType, "CmdMap.add received cmd that wasn't a string"
-        assert type(callback) == FunctionType, "CmdMap.add received callback that wasn't a function"
-        assert type(noAbbrev) == BooleanType, "CmdMap.add received noAbbrev that wasn't a bool"
-
-        (first, cmd) = util.first_token( cmd )
-
-        assert len(first) > 0, "CmdMap.add received first from util.first_token with length 0"
-
-        node = self
-
-        for nextChar in first:
-             #print "next char: ", nextChar
-
-             if nextChar not in node.possibleNext:
-                 node.possibleNext[ nextChar ] = CmdMap()
-                 #print "adding callback", callback
-                 node.possibleNext[ nextChar ].callback = callback
-                 node.possibleNext[ nextChar ].noAbbrev = noAbbrev
-             else:
-                 if node.possibleNext[ nextChar ].noAbbrev and not noAbbrev:
-                     node.possibleNext[ nextChar ].callback = callback
-                     node.possibleNext[ nextChar ].noAbbrev = False
-
-             if len(cmd) > 0:
-                 #print "should add next token node"
-                 if not node.possibleNext[ nextChar ].nextTokenNode:
-                     node.possibleNext[ nextChar ].nextTokenNode = CmdMap()
-
-                 node.possibleNext[ nextChar ].nextTokenNode.add( cmd, callback, noAbbrev )
-
-             node = node.possibleNext[ nextChar ]
-
-
-
-        if len(cmd) == 0:
-            node.noAbbrev = False
-
-        return self
-
+    # rename to map?
+    # rename exceptions to "CallbackFound" "NoCallbackFound"
     # str is cmd to be matched
     def match( self, cmd ):
 
@@ -179,7 +136,7 @@ def addCmdFromNextToken( cmdMap, cmd, callback, abbrev ):
 
     (cmdFirstToken, cmdRemainingTokens) = util.first_token(cmd)
 
-    assert len(cmdFirstToken) > 0, "CmdMapInternal.addCmdFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen."
+    assert len(cmdFirstToken) > 0, "CmdMap.addCmdFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen... @Todo unless cmd is all whitespace"
         
     for char in cmdFirstToken:
         cmdMap = addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, abbrev )
@@ -188,3 +145,17 @@ def addCmdFromNextToken( cmdMap, cmd, callback, abbrev ):
         cmdMap.abbrev = True
             
  
+
+def mapFromNextToken( cmdMap, cmd):
+    (cmdFirstToken, cmdRemainingTokens) = util.first_token(cmd)
+
+    assert len(cmdFirstToken) > 0, "CmdMap.mapFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen... @Todo unless cmd is all whitespace"
+  
+    for char in cmdFirstToken:
+
+
+
+
+
+def mapFromNextChar( cmdMap, cmd):
+    pass
