@@ -39,55 +39,55 @@ class TestTrie(unittest.TestCase):
         self.assert_(self.node == self.node.addCmd("jim", a))
 
     def testmatch_cmd_is_string(self):
-        self.assertRaises(AssertionError, self.node.match, None)
-        self.assertRaises(AssertionError, self.node.match, 17)
+        self.assertRaises(AssertionError, self.node.map, None)
+        self.assertRaises(AssertionError, self.node.map, 17)
 
     def testsys_epsilon_nomatch(self):
-        self.assertRaises(exceptions.NoMatch, self.node.match, "")
+        self.assertRaises(exceptions.NoMatch, self.node.map, "")
 
     def testsys_single_match(self):
         self.node.addCmd( "abc", a )
-        self.assertRaises(exceptions.Match, self.node.match, "abc")
+        self.assertRaises(exceptions.Match, self.node.map, "abc")
 
     def testsys_all_prefixes_match(self):
         self.node.addCmd( "abc", a )
-        self.assertRaises(exceptions.Match, self.node.match, "a")
-        self.assertRaises(exceptions.Match, self.node.match, "ab")
+        self.assertRaises(exceptions.Match, self.node.map, "a")
+        self.assertRaises(exceptions.Match, self.node.map, "ab")
 
     def testsys_callback_works(self):
         self.node.addCmd( "abc", a )
         try:
-            self.node.match("abc")
+            self.node.map("abc")
         except exceptions.Match, m:
             self.assert_(m.callback() == "a")
 
     def testsys_multitoken_match(self):
         self.node.addCmd( "cast fireball", a )
-        self.assertRaises(exceptions.Match, self.node.match, "cast fireball")
+        self.assertRaises(exceptions.Match, self.node.map, "cast fireball")
 
 
     def testsys_all_prefixes_multitoken_match(self):
         self.node.addCmd( "cast fly", a )
-        self.assertRaises(exceptions.Match, self.node.match, "c fly")
-        self.assertRaises(exceptions.Match, self.node.match, "ca fly")
-        self.assertRaises(exceptions.Match, self.node.match, "cas fly")
-        self.assertRaises(exceptions.Match, self.node.match, "cast f")
-        self.assertRaises(exceptions.Match, self.node.match, "cast fl")
-        self.assertRaises(exceptions.Match, self.node.match, "cas  f")
-        self.assertRaises(exceptions.Match, self.node.match, "cas  fl")
-        self.assertRaises(exceptions.Match, self.node.match, "cas  fly")
-        self.assertRaises(exceptions.Match, self.node.match, "ca  f")
-        self.assertRaises(exceptions.Match, self.node.match, "ca  fl")
-        self.assertRaises(exceptions.Match, self.node.match, "ca  fly")
-        self.assertRaises(exceptions.Match, self.node.match, "c  f")
-        self.assertRaises(exceptions.Match, self.node.match, "c  fl")
-        self.assertRaises(exceptions.Match, self.node.match, "c  fly")
+        self.assertRaises(exceptions.Match, self.node.map, "c fly")
+        self.assertRaises(exceptions.Match, self.node.map, "ca fly")
+        self.assertRaises(exceptions.Match, self.node.map, "cas fly")
+        self.assertRaises(exceptions.Match, self.node.map, "cast f")
+        self.assertRaises(exceptions.Match, self.node.map, "cast fl")
+        self.assertRaises(exceptions.Match, self.node.map, "cas  f")
+        self.assertRaises(exceptions.Match, self.node.map, "cas  fl")
+        self.assertRaises(exceptions.Match, self.node.map, "cas  fly")
+        self.assertRaises(exceptions.Match, self.node.map, "ca  f")
+        self.assertRaises(exceptions.Match, self.node.map, "ca  fl")
+        self.assertRaises(exceptions.Match, self.node.map, "ca  fly")
+        self.assertRaises(exceptions.Match, self.node.map, "c  f")
+        self.assertRaises(exceptions.Match, self.node.map, "c  fl")
+        self.assertRaises(exceptions.Match, self.node.map, "c  fly")
 
     def testsys_overwrite_match(self):
         self.node.addCmd( "abc", a )
         self.node.addCmd( "abc", b )
         try:
-            self.node.match("abc")
+            self.node.map("abc")
         except exceptions.Match, m:
             self.assert_(m.callback() == "a")
 
@@ -95,7 +95,7 @@ class TestTrie(unittest.TestCase):
         self.node.addCmd( "abc", a )
         self.node.addCmd( "abcd", b )
         try:
-            self.node.match("abcd")
+            self.node.map("abcd")
         except exceptions.Match, m:
             self.assert_(m.callback() == "b")
 
@@ -103,38 +103,38 @@ class TestTrie(unittest.TestCase):
         self.node.addCmd( "abc", a )
         self.node.addCmd( "abc def", b )
         try:
-            self.node.match("abc def")
+            self.node.map("abc def")
         except exceptions.Match, m:
             self.assert_(m.callback() == "b")
         
     def testsys_noabbrev_match(self):
-        self.node.addCmd( "abc", a, True )
+        self.node.addCmd( "abc", a, False )
         self.assertRaises(exceptions.NoMatch, self
-                          .node.match, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.match, "ab")
-        self.assertRaises(exceptions.Match, self.node.match, "abc")
+                          .node.map, "a")
+        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
+        self.assertRaises(exceptions.Match, self.node.map, "abc")
 
     def testsys_noabbrev_overwrite_match(self):
-        self.node.addCmd( "abc", a, True )
-        self.node.addCmd( "abc", b, True )
-        self.assertRaises(exceptions.NoMatch, self.node.match, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.match, "ab")
+        self.node.addCmd( "abc", a, False )
+        self.node.addCmd( "abc", b, False )
+        self.assertRaises(exceptions.NoMatch, self.node.map, "a")
+        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
         try:
-            self.node.match("abc")
+            self.node.map("abc")
         except exceptions.Match, m:
             self.assert_(m.callback() == "a")
 
     def testsys_noabbrev_overwrite_longer_match(self):
-        self.node.addCmd( "abc", a, True )
-        self.node.addCmd( "abcd", b, True )
-        self.assertRaises(exceptions.NoMatch, self.node.match, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.match, "ab")
+        self.node.addCmd( "abc", a, False )
+        self.node.addCmd( "abcd", b, False )
+        self.assertRaises(exceptions.NoMatch, self.node.map, "a")
+        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
         try:
-            self.node.match("abc")
+            self.node.map("abc")
         except exceptions.Match, m:
             self.assert_(m.callback() == "a")
         try:
-            self.node.match("abcd")
+            self.node.map("abcd")
         except exceptions.Match, m:
             self.assert_(m.callback() == "b")
 
