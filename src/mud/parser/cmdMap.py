@@ -11,14 +11,6 @@ class CmdMap:
         self.allowAbbrev = True
 
 
-    # adds a new (command, callback) key-value pair to the map
-    #  cmd - syntax of new command (string)
-    #  callback - function the map returns for key cmd (function)
-    #  allowAbbrev - allow all possible abbreviations of cmd (bool)
-    #
-    #  behaviour is undefined for re-adding the same cmd
-    #
-    #  
     def addCmd(self, cmd, callback, allowAbbrev = True ):
         """CmdMap.addCmd: adds a new (command, callback) key-value pair to the map
          @cmd - syntax of new command (string)
@@ -33,14 +25,12 @@ class CmdMap:
         return self
 
 
-    # returns the value (funtion) associated with the key (cmd)
-    #  cmd - syntax of cmd to find (string)
-    
     def find( self, cmd):
         """CmdMap.find: returns the value (funtion) associated with the key (cmd)
          @cmd - command to map to a callback (string)
 
          returns (callback <function>, remaining tokens in cmd <string>) or None if not found
+         @TODO: return (None, None) for no find? for consistency
         """
         assert type(cmd) == StringType, "CmdMap.find received a cmd that wasn't a string"
 
