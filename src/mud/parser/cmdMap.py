@@ -1,9 +1,7 @@
 from types import StringType, FunctionType, BooleanType
 
 import util
-from exceptions import Match, NoMatch
 
-# could call "parser" CmdContext
 class CmdMap:
 
     def __init__(self):
@@ -12,25 +10,50 @@ class CmdMap:
         self.nextTokenNode = None
         self.allowAbbrev = True
 
+
+    # adds a new (command, callback) key-value pair to the map
+    #  cmd - syntax of new command (string)
+    #  callback - function the map returns for key cmd (function)
+    #  allowAbbrev - allow all possible abbreviations of cmd (bool)
+    #
+    #  behaviour is undefined for re-adding the same cmd
+    #
+    #  
     def addCmd(self, cmd, callback, allowAbbrev = True ):
+        """CmdMap.addCmd: adds a new (command, callback) key-value pair to the map
+         @cmd - syntax of new command (string)
+         @callback - function the map returns for key cmd (function)
+         @allowAbbrev - allow all possible abbreviations of cmd (bool)
+         
+         behaviour is undefined for re-adding the same cmd
+         returns self for chaining
+        """
         addCmdCheckPreconds( cmd, callback, allowAbbrev)
         addCmdFromNextToken( self, cmd, callback, allowAbbrev )
         return self
 
 
-    def map( self, cmd):
-        assert type(cmd) == StringType, "CmdMap.match received a cmd that wasn't a string"
+    # returns the value (funtion) associated with the key (cmd)
+    #  cmd - syntax of cmd to find (string)
+    
+    def find( self, cmd):
+        """CmdMap.find: returns the value (funtion) associated with the key (cmd)
+         @cmd - command to map to a callback (string)
+
+         returns (callback <function>, remaining tokens in cmd <string>) or None if not found
+        """
+        assert type(cmd) == StringType, "CmdMap.find received a cmd that wasn't a string"
 
         if len(cmd) == 0:
-            raise NoMatch
+            return None
 
-        mapFromNextToken( self, cmd )
+        return findFromNextToken( self, cmd )
     
 
     # @todo add noAllowAbbrev and callback data to str
     #       without breaking unit tests
     def __str__helper(self, prefix=""):
-        print "toString on CmdMap id %i with prefix %sEND. posnext (%s) nextTokenNode (%s)" % (id(self), prefix, str(self.possibleNext), not not self.nextTokenNode )
+        #print "toString on CmdMap id %i with prefix %sEND. posnext (%s) nextTokenNode (%s)" % (id(self), prefix, str(self.possibleNext), not not self.nextTokenNode )
         toReturn = ""
 
         for char in self.possibleNext:
@@ -51,8 +74,6 @@ class CmdMap:
 
 
 
-
-
 ################################
 ###### Internal ###############
 ################################
@@ -65,11 +86,10 @@ def addCmdCheckPreconds( cmd, callback, allowAbbrev):
 
 
 def addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, allowAbbrev):
-
-    print "next char: ", char
+    #print "next char: ", char
     if char not in cmdMap.possibleNext:
         cmdMap.possibleNext[ char ] = CmdMap()
-        print "adding callback", callback
+        #print "adding callback", callback
         cmdMap.possibleNext[ char ].callback = callback
         cmdMap.possibleNext[ char ].allowAbbrev = allowAbbrev
     else:
@@ -78,26 +98,24 @@ def addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, allowAbbrev)
             cmdMap.possibleNext[ char ].allowAbbrev = True
 
     if len(cmdRemainingTokens) > 0:
-        print "should add next token node"
+        #print "should add next token node"
         if not cmdMap.possibleNext[ char ].nextTokenNode:
-            print "adding next token node"
+            #print "adding next token node"
             cmdMap.possibleNext[ char ].nextTokenNode = CmdMap()
 
         cmdMap.possibleNext[ char ].nextTokenNode.addCmd( cmdRemainingTokens, callback, allowAbbrev )
-        print "returned from nextTokenNode recurse"
+        #print "returned from nextTokenNode recurse"
 
     return cmdMap.possibleNext[ char ]
     
 
 def addCmdFromNextToken( cmdMap, cmd, callback, allowAbbrev ):
-
     (cmdFirstToken, cmdRemainingTokens) = util.first_token(cmd)
 
     if len(cmdRemainingTokens) > 0:
         assert allowAbbrev, "CmdMap currently supports only monotoken no-allowAbbreviate commands"
 
-    print "next token: %s      remaining: %s" % (cmdFirstToken, cmdRemainingTokens)
-
+    #print "next token: %s      remaining: %s" % (cmdFirstToken, cmdRemainingTokens)
     assert len(cmdFirstToken) > 0, "CmdMap.addCmdFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen... @Todo unless cmd is all whitespace"
         
     for char in cmdFirstToken:
@@ -107,40 +125,32 @@ def addCmdFromNextToken( cmdMap, cmd, callback, allowAbbrev ):
         cmdMap.allowAbbrev = True
             
  
-
-def mapFromNextToken( cmdMap, cmd):
-
+def findFromNextToken( cmdMap, cmd):
     (cmdFirstToken, cmdRemainingTokens) = util.first_token(cmd)
-    print "next token: %s      remaining: %s" % (cmdFirstToken, cmdRemainingTokens)
+    #print "next token: %s      remaining: %s" % (cmdFirstToken, cmdRemainingTokens)
 
-
-    assert len(cmdFirstToken) > 0, "CmdMap.mapFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen... @Todo unless cmd is all whitespace"
+    assert len(cmdFirstToken) > 0, "CmdMap.findFromNextToken received length 0 cmdFirstToken from util.firstToken. This should never happen... @Todo unless cmd is all whitespace"
 
     for char in cmdFirstToken:
-        print "next char %s" % char
+        #print "next char %s" % char
         if char in cmdMap.possibleNext:
             cmdMap = cmdMap.possibleNext[ char ]
         else:
-            raise NoMatch
+            return None
 
     if len(cmdRemainingTokens) > 0 and cmdMap.nextTokenNode:
-        try:
-            cmdMap.nextTokenNode.map( cmdRemainingTokens )
-        except NoMatch:
-            pass
-            #print "nextTokenNode.map raised NoMatch with remaining %s" % cmdRemainingTokens
+        result = cmdMap.nextTokenNode.find( cmdRemainingTokens )
+        if result: return result
 
     if not cmdMap.allowAbbrev:
-        raise NoMatch
+        return None
 
-    assert cmdMap.callback, "CmdMap.map found a match with a null callback"
+    assert cmdMap.callback, "CmdMap.find found a match with a null callback"
 
     if len(cmdRemainingTokens) == 0:
         cmdRemainingTokens = None
 
-    raise Match(cmdMap.callback, cmdRemainingTokens)
+    return (cmdMap.callback, cmdRemainingTokens)
 
     
 
-def mapFromNextChar( cmdMap, cmd):
-    pass

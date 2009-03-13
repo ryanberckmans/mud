@@ -1,141 +1,108 @@
 import unittest
 
-from .. import trie, exceptions
-
-def a():
-    return "a"
-
-def b():
-    return "b"
-
-def c():
-    return "c"
+from .. import cmdMap, exceptions
 
 
-class TestTrie(unittest.TestCase):
+def blank():
+    return lambda : "blank function"
+
+def f( cmd ):
+    return lambda : cmd
+
+
+class TestCmdMap(unittest.TestCase):
     
     def setUp(self):
-        self.node = trie.CmdMap()
+        self.map = cmdMap.CmdMap()
 
-    def testrepr(self):
-        self.assertEqual(str(self.node), "")
-        self.node.addCmd( "abc", a )
-        self.assertEqual( str(self.node), "a\nab\nabc\n")
+    def testaddCmdCmdMustBeString(self):
+        self.assertRaises(AssertionError, self.map.addCmd, None, f("a"))
+        self.assertRaises(AssertionError, self.map.addCmd, 17, f("a"))
 
-    
-    def testadd_cmd_is_string(self):
-        self.assertRaises(AssertionError, self.node.addCmd, None, a)
-        self.assertRaises(AssertionError, self.node.addCmd, 17, a)
+    def testaddCmdCallbackMustBeFunction(self):
+        self.assertRaises(AssertionError, self.map.addCmd, "Jim", None)
+        self.assertRaises(AssertionError, self.map.addCmd, "Jim", 17)
 
-    def testadd_callback_is_function(self):
-        self.assertRaises(AssertionError, self.node.addCmd, "Jim", None)
-        self.assertRaises(AssertionError, self.node.addCmd, "Jim", 17)
+    def testaddCmdAllowAbbrevMustBeBool(self):
+        self.assertRaises(AssertionError, self.map.addCmd, "jim", blank(), None)
+        self.assertRaises(AssertionError, self.map.addCmd, "jim", blank(), 17)
 
-    def testadd_noabbrev_is_bool(self):
-        self.assertRaises(AssertionError, self.node.addCmd, "jim", a, None)
-        self.assertRaises(AssertionError, self.node.addCmd, "jim", a, 17)
+    def testaddCmdReturnsSelf(self):
+        self.assert_(self.map == self.map.addCmd("jim", f("a")))
 
-    def testadd_returnsself(self):
-        self.assert_(self.node == self.node.addCmd("jim", a))
+    def testmapCmdMustBeString(self):
+        self.assertRaises(AssertionError, self.map.find, None)
+        self.assertRaises(AssertionError, self.map.find, 17)
 
-    def testmatch_cmd_is_string(self):
-        self.assertRaises(AssertionError, self.node.map, None)
-        self.assertRaises(AssertionError, self.node.map, 17)
+    def testsysEpsilonFindsNothing(self):
+        self.assert_(self.map.find("") == None)
 
-    def testsys_epsilon_nomatch(self):
-        self.assertRaises(exceptions.NoMatch, self.node.map, "")
+    def testsysBasicFind(self):
+        self.map.addCmd( "abc", f )
+        self.assert_( self.map.find("abc") == (f, None)) 
 
-    def testsys_single_match(self):
-        self.node.addCmd( "abc", a )
-        self.assertRaises(exceptions.Match, self.node.map, "abc")
+    def testsysAllPrefixesFind(self):
+        self.map.addCmd( "abc", f )
+        self.assert_( self.map.find("a") == (f, None)) 
+        self.assert_( self.map.find("ab") == (f, None)) 
 
-    def testsys_all_prefixes_match(self):
-        self.node.addCmd( "abc", a )
-        self.assertRaises(exceptions.Match, self.node.map, "a")
-        self.assertRaises(exceptions.Match, self.node.map, "ab")
+    def testsysCallbackWorks(self):
+        self.map.addCmd( "abc", f("a") )
+        self.assert_(self.map.find("abc")[0]() == "a")
 
-    def testsys_callback_works(self):
-        self.node.addCmd( "abc", a )
-        try:
-            self.node.map("abc")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "a")
+    def testsysMultitokenFind(self):
+        self.map.addCmd( "cast fireball", f("quaz") )
+        self.assert_(self.map.find("cast fireball") != None)
 
-    def testsys_multitoken_match(self):
-        self.node.addCmd( "cast fireball", a )
-        self.assertRaises(exceptions.Match, self.node.map, "cast fireball")
+    def testsysAllPrefixesMultitokenFind(self):
+        self.map.addCmd( "cast fly", f("a") )
+        self.assert_(self.map.find("c fly") != None )
+        self.assert_(self.map.find("ca fly") != None )
+        self.assert_(self.map.find("cas fly") != None )
+        self.assert_(self.map.find("cast f") != None )
+        self.assert_(self.map.find("cast fl") != None )
+        self.assert_(self.map.find("cas  f") != None )
+        self.assert_(self.map.find("cas  fl") != None )
+        self.assert_(self.map.find("cas  fly") != None )
+        self.assert_(self.map.find("ca  f") != None )
+        self.assert_(self.map.find("ca  fl") != None )
+        self.assert_(self.map.find("ca  fly") != None )
+        self.assert_(self.map.find("c  f") != None )
+        self.assert_(self.map.find("c  fl") != None )
+        self.assert_(self.map.find("c  fly") != None )
 
+    def testsysOverwriteFind(self):
+        self.map.addCmd( "abc", f("first") )
+        self.map.addCmd( "abc", f("second") )
+        self.assert_(self.map.find("abc")[0]() == "first")
 
-    def testsys_all_prefixes_multitoken_match(self):
-        self.node.addCmd( "cast fly", a )
-        self.assertRaises(exceptions.Match, self.node.map, "c fly")
-        self.assertRaises(exceptions.Match, self.node.map, "ca fly")
-        self.assertRaises(exceptions.Match, self.node.map, "cas fly")
-        self.assertRaises(exceptions.Match, self.node.map, "cast f")
-        self.assertRaises(exceptions.Match, self.node.map, "cast fl")
-        self.assertRaises(exceptions.Match, self.node.map, "cas  f")
-        self.assertRaises(exceptions.Match, self.node.map, "cas  fl")
-        self.assertRaises(exceptions.Match, self.node.map, "cas  fly")
-        self.assertRaises(exceptions.Match, self.node.map, "ca  f")
-        self.assertRaises(exceptions.Match, self.node.map, "ca  fl")
-        self.assertRaises(exceptions.Match, self.node.map, "ca  fly")
-        self.assertRaises(exceptions.Match, self.node.map, "c  f")
-        self.assertRaises(exceptions.Match, self.node.map, "c  fl")
-        self.assertRaises(exceptions.Match, self.node.map, "c  fly")
+    def testsysLongerFind(self):
+        self.map.addCmd( "abc", f("a") )
+        self.map.addCmd( "abcd", f("b") )
+        self.assert_(self.map.find("abcd")[0]() == "b")
 
-    def testsys_overwrite_match(self):
-        self.node.addCmd( "abc", a )
-        self.node.addCmd( "abc", b )
-        try:
-            self.node.map("abc")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "a")
-
-    def testsys_longer_match(self):
-        self.node.addCmd( "abc", a )
-        self.node.addCmd( "abcd", b )
-        try:
-            self.node.map("abcd")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "b")
-
-    def testsys_greedy_match(self):
-        self.node.addCmd( "abc", a )
-        self.node.addCmd( "abc def", b )
-        try:
-            self.node.map("abc def")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "b")
+    def testsysGreedyFind(self):
+        self.map.addCmd( "abc", f("a") )
+        self.map.addCmd( "abc def", f("b") )
+        self.assert_(self.map.find("abc def")[0]() == "b")
         
-    def testsys_noabbrev_match(self):
-        self.node.addCmd( "abc", a, False )
-        self.assertRaises(exceptions.NoMatch, self
-                          .node.map, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
-        self.assertRaises(exceptions.Match, self.node.map, "abc")
+    def testsysNoAllowAbbrevFind(self):
+        self.map.addCmd( "abc", f("a"), False )
+        self.assert_(self.map.find("a") == None)
+        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("abc") != None)
 
-    def testsys_noabbrev_overwrite_match(self):
-        self.node.addCmd( "abc", a, False )
-        self.node.addCmd( "abc", b, False )
-        self.assertRaises(exceptions.NoMatch, self.node.map, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
-        try:
-            self.node.map("abc")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "a")
+    def testsysNoAllowAbbrevOverwriteFind(self):
+        self.map.addCmd( "abc", f("a"), False )
+        self.map.addCmd( "abc", f("b"), False )
+        self.assert_(self.map.find("a") == None)
+        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("abc")[0]() == "a")
 
-    def testsys_noabbrev_overwrite_longer_match(self):
-        self.node.addCmd( "abc", a, False )
-        self.node.addCmd( "abcd", b, False )
-        self.assertRaises(exceptions.NoMatch, self.node.map, "a")
-        self.assertRaises(exceptions.NoMatch, self.node.map, "ab")
-        try:
-            self.node.map("abc")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "a")
-        try:
-            self.node.map("abcd")
-        except exceptions.Match, m:
-            self.assert_(m.callback() == "b")
-
-     
+    def testsysNoAllowAbbrevOverwriteLongerFind(self):
+        self.map.addCmd( "abc", f("a"), False )
+        self.map.addCmd( "abcd", f("b"), False )
+        self.assert_(self.map.find("a") == None)
+        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("abc")[0]() == "a")
+        self.assert_(self.map.find("abcd")[0]() == "b")
