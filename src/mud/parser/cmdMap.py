@@ -2,6 +2,11 @@ from types import StringType, FunctionType, BooleanType
 
 import util
 
+def isCmdMap( o ):
+    if hasattr( o, "__CMD_MAP__"): return True
+    return False
+
+
 class CmdMap:
 
     def __init__(self):
@@ -9,6 +14,7 @@ class CmdMap:
         self.callback = None
         self.nextTokenNode = None
         self.allowAbbrev = True
+        self.__CMD_MAP__ = True
 
 
     def addCmd(self, cmd, callback, allowAbbrev = True ):
@@ -29,13 +35,12 @@ class CmdMap:
         """CmdMap.find: returns the value (funtion) associated with the key (cmd)
          @cmd - command to map to a callback (string)
 
-         returns (callback <function>, remaining tokens in cmd <string>) or None if not found
-         @TODO: return (None, None) for no find? for consistency
+         returns (callback <function>, remaining tokens in cmd <string>), callback == None if not found 
         """
         assert type(cmd) == StringType, "CmdMap.find received a cmd that wasn't a string"
 
         if len(cmd) == 0:
-            return None
+            return (None, None)
 
         return findFromNextToken( self, cmd )
     
@@ -126,14 +131,14 @@ def findFromNextToken( cmdMap, cmd):
         if char in cmdMap.possibleNext:
             cmdMap = cmdMap.possibleNext[ char ]
         else:
-            return None
+            return (None, None)
 
     if len(cmdRemainingTokens) > 0 and cmdMap.nextTokenNode:
         result = cmdMap.nextTokenNode.find( cmdRemainingTokens )
         if result: return result
 
     if not cmdMap.allowAbbrev:
-        return None
+        return (None, None)
 
     assert cmdMap.callback, "CmdMap.find found a match with a null callback"
 

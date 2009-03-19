@@ -35,7 +35,7 @@ class TestCmdMap(unittest.TestCase):
         self.assertRaises(AssertionError, self.map.find, 17)
 
     def testsysEpsilonFindsNothing(self):
-        self.assert_(self.map.find("") == None)
+        self.assert_(self.map.find("")[0] == None)
 
     def testsysBasicFind(self):
         self.map.addCmd( "abc", f )
@@ -88,21 +88,21 @@ class TestCmdMap(unittest.TestCase):
         
     def testsysNoAllowAbbrevFind(self):
         self.map.addCmd( "abc", f("a"), False )
-        self.assert_(self.map.find("a") == None)
-        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("a")[0] == None)
+        self.assert_(self.map.find("ab")[0] == None)
         self.assert_(self.map.find("abc") != None)
 
     def testsysNoAllowAbbrevOverwriteFind(self):
         self.map.addCmd( "abc", f("a"), False )
         self.map.addCmd( "abc", f("b"), False )
-        self.assert_(self.map.find("a") == None)
-        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("a")[0] == None)
+        self.assert_(self.map.find("ab")[0] == None)
         self.assert_(self.map.find("abc")[0]() == "a")
 
     def testsysNoAllowAbbrevOverwriteLongerFind(self):
         self.map.addCmd( "abc", f("a"), False )
         self.map.addCmd( "abcd", f("b"), False )
-        self.assert_(self.map.find("a") == None)
-        self.assert_(self.map.find("ab") == None)
+        self.assert_(self.map.find("a")[0] == None)
+        self.assert_(self.map.find("ab")[0] == None)
         self.assert_(self.map.find("abc")[0]() == "a")
         self.assert_(self.map.find("abcd")[0]() == "b")

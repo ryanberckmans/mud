@@ -1,57 +1,71 @@
+from types import StringType, FunctionType, ListType
 
+import cmdMap
 
+def handleCmd( cmd, client, polymorphicVariable):
+    """
+     handleCmd( cmd, client, polymorphic )
 
+      - cmd: string, the cmd being handled
+      - client: any type, the client executing the cmd, not used explicitly
+      - polymorphic third param:
+          - CmdMap, a single CmdMap
+          - [CmdMap], a list of CmdMaps
+          - f client -> CmdMap, a single function mapping client to a CmdMap
+          - [f client -> CmdMap], a list of functions mapping client to CmdMap
+    """
 
-def handleCmd( cmd, client, cmdMapAccessors ):
+    assert type(cmd) == StringType, "parser.handler.handleCmd expected type(cmd)==string"
+    assert client, "parser.handler.handleCmd received a null client"
+    assert polymorphicVariable, "parser.handler.handleCmd received a null maps param"
 
-    pass
+    if type(polymorphicVariable) == ListType:
 
+        if len(polymorphicVariable) == 0:
+            return
 
+        if cmdMap.isCmdMap(polymorphicVariable[0]):
+            handleCmdFromMaps( cmd, client, polymorphicVariable)
+        else:
+            assert type(polymorphicVariable[0]) == FunctionType, "parser.handler.handleCmd received a list and it did not contain CmdMaps or functions"
+            handleCmdFromAccessors( cmd, client, polymorphicVariable)
 
-
-              
-
- 
-# cmd - string
-# player - the player who's command this is
-# parsers - list of Parser objects
-# callback - default NoMatch fnct /w signature( player, cmd )
-# always returns
-def handleCmd( cmd, player, parsers, callback ):
-
-    assert type(cmd) == types.StringType, "parser.handle_cmd received cmd that wasn't a string"
-    assert type(parsers) == types.ListType, "parser.handle_cmd received parsers that wasn't a list"
-    assert type(callback) == types.FunctionType, "parser.handle_cmd received callback that wasn't a function"
-  
-    keyword = None
-    nokeywordmatch = False
-
-    for parser in parsers:
-
-        try:
-            parser.parse( cmd, player )
-        except NoMatch:
-            continue
-        except Match, m:
-
-            try:
-                assert m.callback, "parser.handle_cmd received null callback while handling Match"
-                m.callback( player, m.remaining)
-                return # handled!
-
-            except NoKeywordMatch, m:
-
-                callback = m.callback
-                keyword = m.keyword
-
-                nokeywordmatch = True
-
-                assert type(callback) == types.FunctionType, "parser.handle_cmd received callback that wasn't a function while handling NoKeywordMatch"
-                assert type(keyword) == types.StringType, "parser.handle_cmd received keyword that wasn't a string while handling NoKeywordMatch"
-
-
-    if nokeywordmatch:
-        callback( player, keyword) # handle NoKeywordMatch
     else:
-        callback( player, cmd ) # handle NoMatch
+        if cmdMap.isCmdMap(polymorphicVariable):
+            handleCmdFromMap( cmd, client, polymorphicVariable)
+        else:
+            assert type(polymorphicVariable) == FunctionType, "parser.handler.handleCmd received a single object and it wasn't a CmdMap or function"
+            handleCmdFromAccessor( cmd, client, polymorphicVariable)
+            
+
+###################################
+## Internal #######################
+###################################
+
+def handleCmdFromAccessor( cmd, client, cmdMapAccessor):
+    handleCmdFromMaps( cmd, client, [cmdMapAccessor( client )] )
+
+def handleCmdFromAccessors( cmd, client, cmdMapAccessors ):
+    cmdMaps = map( lambda x: x( client ), cmdMapAccessors )
+    handleCmdFromMaps( cmdMaps )
+
+def handleCmdFromMaps( cmd, client, cmdMaps ):
+    abandonedCallback = None
+
+    for cmdMap in cmdMaps:
+        assert CmdMap.isCmdMap( cmdMap ), "parser.handler.handleCmd; cmdMaps list contains a non-CmdMap"
+        (callback, remaining) = cmdMap.find( cmd )
+
+        if callback:
+            try:
+                callback( client, remaining)
+            except AbandonCallback, e:
+                abandonedCallback = e.callback
+
+            return # handled!
+
+    if abandonedCallback:
+        abandonedCallback( client )
+
+    return # handled!
 
