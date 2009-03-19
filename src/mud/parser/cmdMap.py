@@ -7,11 +7,17 @@ def isCmdMap( o ):
     return False
 
 
+#@ todo ensure the empty cmd can return a valid callback
 class CmdMap:
 
-    def __init__(self):
+    def __init__(self, defaultCallback = None ):
+        """CmdMap.init( defaultCallback = None )
+         @defaultCallback: FunctionType - specifies the callback to return if CmdMap.find fails
+        """
+        
         self.possibleNext = {}
         self.callback = None
+        self.defaultCallback = defaultCallback
         self.nextTokenNode = None
         self.allowAbbrev = True
         self.__CMD_MAP__ = True
@@ -35,12 +41,12 @@ class CmdMap:
         """CmdMap.find: returns the value (funtion) associated with the key (cmd)
          @cmd - command to map to a callback (string)
 
-         returns (callback <function>, remaining tokens in cmd <string>), callback == None if not found 
+         returns (callback <function>, remaining tokens in cmd <string>), callback == self.defaultCallback if not found 
         """
         assert type(cmd) == StringType, "CmdMap.find received a cmd that wasn't a string"
 
         if len(cmd) == 0:
-            return (None, None)
+            return (self.defaultCallback, None)
 
         return findFromNextToken( self, cmd )
     
@@ -83,7 +89,7 @@ def addCmdCheckPreconds( cmd, callback, allowAbbrev):
 def addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, allowAbbrev):
     #print "next char: ", char
     if char not in cmdMap.possibleNext:
-        cmdMap.possibleNext[ char ] = CmdMap()
+        cmdMap.possibleNext[ char ] = CmdMap( cmdMap.defaultCallback )
         #print "adding callback", callback
         cmdMap.possibleNext[ char ].callback = callback
         cmdMap.possibleNext[ char ].allowAbbrev = allowAbbrev
@@ -96,7 +102,7 @@ def addCmdFromNextChar( cmdMap, char, cmdRemainingTokens, callback, allowAbbrev)
         #print "should add next token node"
         if not cmdMap.possibleNext[ char ].nextTokenNode:
             #print "adding next token node"
-            cmdMap.possibleNext[ char ].nextTokenNode = CmdMap()
+            cmdMap.possibleNext[ char ].nextTokenNode = CmdMap( cmdMap.defaultCallback )
 
         cmdMap.possibleNext[ char ].nextTokenNode.addCmd( cmdRemainingTokens, callback, allowAbbrev )
         #print "returned from nextTokenNode recurse"
@@ -131,14 +137,14 @@ def findFromNextToken( cmdMap, cmd):
         if char in cmdMap.possibleNext:
             cmdMap = cmdMap.possibleNext[ char ]
         else:
-            return (None, None)
+            return (cmdMap.defaultCallback, None)
 
     if len(cmdRemainingTokens) > 0 and cmdMap.nextTokenNode:
         result = cmdMap.nextTokenNode.find( cmdRemainingTokens )
         if result: return result
 
     if not cmdMap.allowAbbrev:
-        return (None, None)
+        return (cmdMap.defaultCallback, None)
 
     assert cmdMap.callback, "CmdMap.find found a match with a null callback"
 

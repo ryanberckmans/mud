@@ -9,6 +9,37 @@ def blank():
 def f( cmd ):
     return lambda : cmd
 
+def call( findResult):
+    return findResult[0]()
+
+class TestCmdMapDefaultCallback(unittest.TestCase):
+
+    def setUp(self):
+        self.map = cmdMap.CmdMap( lambda : "default")
+
+    def test_findDefaultCallbackFromEpsilon(self):
+        self.assert_( call(self.map.find("")) == "default" )
+
+    def test_findDefaultCallbackFromBasicNoFind(self):
+        self.assert_( call(self.map.find("doesntexist")) == "default" )
+
+    def testsysBasicFindWithDefaultCallback(self):
+        self.map.addCmd( "abc", f )
+        self.assert_( self.map.find("abc") == (f, None))
+        self.assert_( call(self.map.find("abcq")) == "default" )
+        self.assert_( call(self.map.find("")) == "default" )
+
+    def testsysAllPrefixesFindWithDefaultCallback(self):
+        self.map.addCmd( "abc", f )
+        self.assert_( self.map.find("a") == (f, None)) 
+        self.assert_( self.map.find("ab") == (f, None)) 
+
+    def testsysMultitokenFindWithDefaultCallback(self):
+        self.map.addCmd( "cast fireball", f("quaz") )
+        self.assert_(self.map.find("cast fireball") != None)
+        self.assert_( call(self.map.find("")) == "default" )
+        self.assert_( call(self.map.find("cast fiq")) == "default" )
+        self.assert_( call(self.map.find("cast fireballl")) == "default" )
 
 class TestCmdMap(unittest.TestCase):
     
