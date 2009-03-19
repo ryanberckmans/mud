@@ -16,7 +16,6 @@ def handleCmd( cmd, client, polymorphicVariable):
     """
 
     assert type(cmd) == StringType, "parser.handler.handleCmd expected type(cmd)==string"
-    assert client, "parser.handler.handleCmd received a null client"
     assert polymorphicVariable, "parser.handler.handleCmd received a null maps param"
 
     if type(polymorphicVariable) == ListType:
@@ -32,7 +31,7 @@ def handleCmd( cmd, client, polymorphicVariable):
 
     else:
         if cmdMap.isCmdMap(polymorphicVariable):
-            handleCmdFromMap( cmd, client, polymorphicVariable)
+            handleCmdFromMaps( cmd, client, [polymorphicVariable])
         else:
             assert type(polymorphicVariable) == FunctionType, "parser.handler.handleCmd received a single object and it wasn't a CmdMap or function"
             handleCmdFromAccessor( cmd, client, polymorphicVariable)
@@ -52,9 +51,9 @@ def handleCmdFromAccessors( cmd, client, cmdMapAccessors ):
 def handleCmdFromMaps( cmd, client, cmdMaps ):
     abandonedCallback = None
 
-    for cmdMap in cmdMaps:
-        assert CmdMap.isCmdMap( cmdMap ), "parser.handler.handleCmd; cmdMaps list contains a non-CmdMap"
-        (callback, remaining) = cmdMap.find( cmd )
+    for cm in cmdMaps:
+        assert cmdMap.isCmdMap( cm ), "parser.handler.handleCmd; cmdMaps list contains a non-CmdMap"
+        (callback, remaining) = cm.find( cmd )
 
         if callback:
             try:
