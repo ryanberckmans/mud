@@ -1,0 +1,31 @@
+
+mud
+        parser
+        core
+        prompt
+        util    
+        logger
+
+
+---
+core vectors
+     sending to clients  
+     disconnecting clients
+     cmds received
+     ll notifies
+     new notifies
+     flushed clients
+python logging
+cpp logging
+module support
+prompt support
+util
+
+"only core" experience
+core vectors/connect, tick, no ll support
+core is manager of client ids
+no prompt with core
+
+
+
+
