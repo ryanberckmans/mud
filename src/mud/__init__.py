@@ -1,3 +1,3 @@
 print "hi from mud!"
 
-__all__ = ["parser"]
+__all__ = ["parser", "core"]

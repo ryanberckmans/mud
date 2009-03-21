@@ -2,10 +2,13 @@
 mud
         parser
         core
-        prompt
-        util    
-        logger
-
+            tick
+            client
+            prompt
+            mod
+        util
+            random functions
+            logger
 
 ---
 core vectors
@@ -26,6 +29,13 @@ core vectors/connect, tick, no ll support
 core is manager of client ids
 no prompt with core
 
+what about the client - ??
+    what does client contain?
+    not prompt ??
+    perhaps client is a pkg containing prompt ??
+    rename core pkg to "tick"
+    perhaps core IS tick/client/prompt - i like this - basic shell experience
+            core could contain interfaces to add a "per tick" callback: hook for combat engine
 
 
 
