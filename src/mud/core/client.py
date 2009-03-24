@@ -1,98 +1,69 @@
-from types import *
+from types import IntegerType
+from mud import parser
 
-import parser
+
+clients = {}
+
+def queueCmd( clientId, cmd ):
+    assert type(clientId) == IntegerType, "client.queueCmd received clientId that wasn't an int"
+    assert type(cmd) == StringType, "client.queueCmd received cmd that wasn't a string"
+    assert clients[ clientId ], "client.queueCmd received a clientId that matches no clients (%s)" % clientId
+    clients[ clientId ].cmds.append( cmd )
+
+
+def disconnectClient( clientId ):
+    #@todo
+    pass
+
+
+def newClient( clientId ):
+    assert type(clientId) == IntegerType, "client.newClient received clientId that wasn't an int"
+    assert clients[ clientId ] == None, "client.newClient received a duplicate clientId (%s)" % clientId
+    clients[ clientId ] = Client( clientId )
+
+
+def flushCmdQueue( clientId ):
+    assert type(clientId) == IntegerType, "client.flushCmdQueue received clientId that wasn't an int"
+    assert clients[ clientId ], "client.flushCmdQueue received a clientId that matches no clients (%s)" % clientId
+    del clients[ clientId ].cmds[:]
+
+
+def pushCmdHandler( clientId, cmdHandler ):
+    assert type(clientId) == IntegerType, "client.pushCmdHandler received clientId that wasn't an int"
+    assert clients[ clientId ], "client.pushCmdHandler received a clientId that matches no clients (%s)" % clientId
+    clients[ clientId ].cmdHandlers.append( cmdHandler )
+    
+
+def popCmdHandler( clientId, cmdHandler):
+    assert type(clientId) == IntegerType, "client.popCmdHandler received clientId that wasn't an int"
+    assert clients[ clientId ], "client.popCmdHandler received a clientId that matches no clients (%s)" % clientId
+    if len( clients[ clientId ].cmdHandlers ) > 0:
+        clients[ clientId ].cmdHandlers.pop()
+
+
+def handleNextCmd( clientId ):
+    assert type(clientId) == IntegerType, "client.handleNextCmd received clientId that wasn't an int"
+    assert clients[ clientId ], "client.handleNextCmd received a clientId that matches no clients (%s)" % clientId
+
+    client = clients[ clientId ]
+
+    if len(client.cmds) == 0:
+        return
+    if len(client.cmdHandlers) == 0:
+        return
+    parser.handler.handleCmd( client, client.cmds.pop(0), client.cmdHandlers[-1])
 
 
 class Client:
 
-    def __init__( self, sendFunc, defaultParser = None ):
-        assert type(sendFunc) == FunctionType, "Client.init received sendFunc that wasn't a function"
-        
+    def __init__( self, ID ):
+        assert type(ID) == IntegerType, "Client.init received ID that wasn't an int"
+
+        self.ID = ID
         self.cmds = []
-        self.parsersStack = [[]]
-        self.send = sendFunc
-        
-        self.defaultCmdCallback = lambda player, cmd: player.send("The command '%s' was not recognized.\n" % cmd )
-
-        if defaultParser:
-            self.appendParser( defaultParser )
+        self.cmdHandlers = []
 
 
-    ### Prompt ###
-
-    def prompt( self ):
-        if len(self.prompts) == 0:
-            return ""
-        
-        return self.prompts[-1]( self )
-
-
-    def pushPrompt(self, promptFunc ):
-        assert type(promptFunc) == FunctionType, "Client.pushPrompt received promptFunc that wasn't a function"
-        self.prompts.append( promptFunc )
-
-
-    def popPrompt(self, n = 1):
-        assert type(n) == IntType, "Client.popPrompt received n that wasn't an int"
-        assert n > 0, "Client.popPrompt received n that wasn't positive"
-
-        try:
-            while n > 0:
-                self.prompts.pop()
-                n -= 1
-        except IndexError:
-            pass
-
-
-    ### Commands ###
-
-    def addCmd( self, cmd ):
-        assert type(cmd) == StringType, "Client.addCmd received cmd that wasn't a string"
-
-        self.cmds.append( cmd )
-
-
-    def flushCmds( self ):
-        del self.cmds[:]
-
-
-    def handleCmd( self ):
-
-        if len(self.cmds) > 0:
-
-            assert len( self.parsersStack ) > 0, "Client.handleCmd was going to handle a cmd with an empty parsers stack"
-            parser.handle_cmd( self.cmds.pop(0), self, self.parsersStack[-1], self.defaultCmdCallback )
-
-
-
-    ### Parsers ###
-
-    def appendParser( self, parser ):
-
-        assert parser, "Client.appendParser received null parser"
-        assert len(self.parsersStack) > 0, "Client.appendParser detected empty parsersStack"
-
-        self.parsersStack[-1].append( parser )
-
-
-    def pushParsers( self, parsers ):
-        assert type(parsers) == ListType, "Client.pushParsers received parsers that wasn't a list"
-
-        self.parsersStack.append( parsers )
-
-
-    def popParsers( self, n = 1):  # note parsersStack may never be empty
-        assert type(n) == IntType, "Client.popParsers received n that wasn't an int"
-        assert n > 0, "Client.popParsers received n that wasn't positive"
-
-        try:
-            while n > 0:
-                self.parsersStack.pop()
-                n -= 1
-        except IndexError:
-            self.parsersStack.append( [] ) # re-append the empty list of parsers
-
-### end Client ###
 
 
 

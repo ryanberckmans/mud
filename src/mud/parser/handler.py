@@ -2,9 +2,9 @@ from types import StringType, FunctionType, ListType
 
 import cmdMap
 
-def handleCmd( cmd, client, polymorphicVariable):
+def handleCmd( client, cmd, polymorphicVariable):
     """
-     handleCmd( cmd, client, polymorphic )
+     handleCmd( client, cmd, polymorphic )
 
       - cmd: string, the cmd being handled
       - client: any type, the client executing the cmd, not used explicitly
