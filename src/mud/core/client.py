@@ -45,13 +45,12 @@ def handleNextCmd( clientId ):
     assert type(clientId) == IntegerType, "client.handleNextCmd received clientId that wasn't an int"
     assert clients[ clientId ], "client.handleNextCmd received a clientId that matches no clients (%s)" % clientId
 
-    client = clients[ clientId ]
+    handleNextCmdFromClient( clients[ clientId ] )
 
-    if len(client.cmds) == 0:
-        return
-    if len(client.cmdHandlers) == 0:
-        return
-    parser.handler.handleCmd( client, client.cmds.pop(0), client.cmdHandlers[-1])
+
+def handleNextCmdForAllClients():
+    for client in clients:
+        handleNextCmdFromClient( client )
 
 
 class Client:
@@ -64,8 +63,17 @@ class Client:
         self.cmdHandlers = []
 
 
+##################
+# Internal #######
+##################
 
+def handleNextCmdFromClient( client ):
+    """ Internal use only """
+    if len(client.cmds) == 0:
+        return
+    if len(client.cmdHandlers) == 0:
+        return
 
+    parser.handler.handleCmd( client, client.cmds.pop(0), client.cmdHandlers[-1])
 
-
-
+        
