@@ -1,4 +1,4 @@
-from types import IntType
+from types import IntType, StringType
 from mud import parser
 
 
@@ -18,39 +18,39 @@ def disconnectClient( clientId ):
 
 def newClient( clientId ):
     assert type(clientId) == IntType, "client.newClient received clientId that wasn't an int"
-    assert clients[ clientId ] == None, "client.newClient received a duplicate clientId (%s)" % clientId
+    assert not clientId in clients, "client.newClient received a duplicate clientId (%s)" % clientId
     clients[ clientId ] = Client( clientId )
 
 
 def flushCmdQueue( clientId ):
     assert type(clientId) == IntType, "client.flushCmdQueue received clientId that wasn't an int"
-    assert clients[ clientId ], "client.flushCmdQueue received a clientId that matches no clients (%s)" % clientId
+    assert clientId in clients, "client.flushCmdQueue received a clientId that matches no clients (%s)" % clientId
     del clients[ clientId ].cmds[:]
 
 
 def pushCmdHandler( clientId, cmdHandler ):
     assert type(clientId) == IntType, "client.pushCmdHandler received clientId that wasn't an int"
-    assert clients[ clientId ], "client.pushCmdHandler received a clientId that matches no clients (%s)" % clientId
+    assert clientId in clients, "client.pushCmdHandler received a clientId that matches no clients (%s)" % clientId
     clients[ clientId ].cmdHandlers.append( cmdHandler )
     
 
 def popCmdHandler( clientId, cmdHandler):
     assert type(clientId) == IntType, "client.popCmdHandler received clientId that wasn't an int"
-    assert clients[ clientId ], "client.popCmdHandler received a clientId that matches no clients (%s)" % clientId
+    assert clientId in clients, "client.popCmdHandler received a clientId that matches no clients (%s)" % clientId
     if len( clients[ clientId ].cmdHandlers ) > 0:
         clients[ clientId ].cmdHandlers.pop()
 
 
 def handleNextCmd( clientId ):
     assert type(clientId) == IntType, "client.handleNextCmd received clientId that wasn't an int"
-    assert clients[ clientId ], "client.handleNextCmd received a clientId that matches no clients (%s)" % clientId
+    assert clientId in clients, "client.handleNextCmd received a clientId that matches no clients (%s)" % clientId
 
     handleNextCmdFromClient( clients[ clientId ] )
 
 
 def handleNextCmdForAllClients():
     for client in clients:
-        handleNextCmdFromClient( client )
+        handleNextCmdFromClient( clients[ client ] )
 
 
 class Client:

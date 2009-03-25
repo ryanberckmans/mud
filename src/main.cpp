@@ -27,11 +27,11 @@ int main () {
   boost::asio::io_service io;
   socket_server server( io );
 
-  socket_data data( python_extract< vector< int >& >( std::string("mud.core.tick.disconnectedClients") ),
-                    python_extract< vector< int>& >( std::string("mud.core.tick.newClients") ),
-                    python_extract< vector< int >& >( std::string("mud.core.tick.flushedClients") ),
-                    python_extract< map< int, string>& >( std::string("mud.core.tick.clientCmds") ),
-                    python_extract< map< int, string>& >( std::string("mud.core.tick.clientMsgs") )
+  socket_data data( python_extract< vector< int >& >( std::string("HACK_DC") ),
+                    python_extract< vector< int>& >( std::string("HACK_NEW") ),
+                    python_extract< vector< int >& >( std::string("HACK_FLUSHED") ),
+                    python_extract< map< int, string>& >( std::string("HACK_CMDS") ),
+                    python_extract< map< int, string>& >( std::string("HACK_MSGS") )
                     );
 
   cmd_router c(io, data, server);

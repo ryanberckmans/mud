@@ -1,3 +1,4 @@
+from cppTypes import *
 import client
 
 newClients = IntVector()
