@@ -6,19 +6,31 @@ def connect( callback, signal ):
     dispatcher.connect( callback, signal )
 
 def addCmd( cmd, callback, allowAbbrev=True ):
-    regularCmdsMap.addCmd( cmd, callback, allowAbbrev )
-
-
+    rootCmdsMap.addCmd( cmd, callback, allowAbbrev )
+    rootCmdsList.append( cmd )
 
 ###############
 # INTERNAL ####
 ###############
 
-regularCmdsMap = cmdMap.CmdMap()
-def addRegularMap( client ):
-    client.cmdHandlers.append( regularCmdsMap )
+rootCmdsMap = cmdMap.CmdMap()
+rootCmdsList = []
 
-connect( addRegularMap, signals.CONNECTED )
+
+def addRootMap( client ):
+    client.cmdHandlers.append( rootCmdsMap )
+
+def cmdList():
+    cmdsStr = "Commands:\r\n"
+    for cmd in rootCmdsList:
+        cmdsStr = cmdsStr + "%s\r\n" % cmd
+
+    return cmdsStr
+
+connect( addRootMap, signals.CONNECTED )
+
+
+
 
 
     
