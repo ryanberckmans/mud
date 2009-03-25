@@ -8,10 +8,8 @@ def welcomeCallback( client ):
 +--~--------------------~--+
 |Welcome to the framework! |
 |                          |
-|This welcome message      |
-|is provided by mod-welcome|
-|and may be disabled by    |
-|destroying the symlink =) |
+|This message is provided  |
+|by mod-welcome =)         |
 +----~-----------~~--------+
 
 """ )
