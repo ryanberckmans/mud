@@ -24,6 +24,6 @@ chatModeMap.addCmd("!", cmdExitChatMode )
 
 def cmdEnterChatMode( client, remaining ):
     client.cmdHandlers.append( chatModeMap )
-    client.send("{!{FG[{FYEntering Chat Mode{FG] {@({!{FC!{@ to exit)\r\n")
+    client.send("\r\n{!{FG[{FYEntering Chat Mode{FG] {@({!{FC!{@ to exit)\r\n")
 
 mod.addCmd( "mode chat", cmdEnterChatMode )
