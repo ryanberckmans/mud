@@ -14,8 +14,10 @@ def queueCmd( clientId, cmd ):
 
 
 def disconnectClient( clientId ):
-    #@todo
-    pass
+    assert type(clientId) == IntType, "client.disconnectClient received clientId that wasn't an int"
+    assert clientId in clients, "client.disconnectClient received a clientId that matches no clients (%s)" % clientId
+    dispatcher.send( signals.DISCONNECTED, newClient, clients[ clientId ] )
+    del clients[ clientId ]
 
 
 def newClient( clientId ):

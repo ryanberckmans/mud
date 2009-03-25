@@ -1,6 +1,8 @@
+from pydispatch import dispatcher
 from cppTypes import *
 import loadMods
 import client
+import signals
 
 newClients = IntVector()
 disconnectedClients = IntVector()
@@ -21,6 +23,8 @@ client.send = send
 
 def tick():
 
+    dispatcher.send( signals.BEFORE_TICK, tick )
+
     for clientId in disconnectedClients:
         client.disconnectClient( clientId )
 
@@ -35,5 +39,5 @@ def tick():
 
     client.handleNextCmdForAllClients()
 
-
+    dispatcher.send( signals.AFTER_TICK, tick )
 

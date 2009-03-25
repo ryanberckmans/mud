@@ -1,34 +1,31 @@
 from types import ListType, StringType, FunctionType
-from parser import Parser
-from trienode import TrieNode
+import mud.parser.cmdMap as cmdMap
 
-# items is a list of (string, callback)
-def create( items ):
+def createMenu( menuPairs, defaultCallback = None ):
+    """
+    menuPairs: [ ( menuItemDescription, menuItemCallback ) ]
+    defaultCallback: the callback executed by the menu if an invalid option is selected
 
-    assert( type(items) == ListType ), "Menu.create received items that wasn't a list"
+    returns ( menuStr, menuMap )
+      menuStr: string repr of menu to send to clients
+      menuMap: CmdMap for the menu
+    """
 
-    menu_str = ""
-    menu_trienode = TrieNode()
+    assert type(menuPairs) == ListType, "menu.createMenu received menuPairs that wasn't a list"
+    if defaultCallback:
+        assert type(defaultCallback) == FunctionType, "menu.createMenu received defaultCallback that wasn't a function"
 
-    menu_index = 1
-    for item in items:
+    menuStr = ""
+    menuMap = CmdMap( defaultCallback )
+    menuIndex = 1
 
-        assert type(item[0]) == StringType, "Menu.create received an item[0] that wasn't a string"
-        assert type(item[1]) == FunctionType, "Menu.create received an item[1] that wasn't a function"
+    for (menuItemDescription, menuItemCallback) in menuPairs:
+        assert type(menuItemDescription) == StringType, "Menu.createMenu received a menu item description that wasn't a string"
+        assert type(menuItemCallback) == FunctionType, "Menu.createMenu received a menu item callback that wasn't a function"
+
+        menuStr = menuStr + "%i) - %s\r\n" % ( menuIndex, menuItemDescription )
+        menuMap.addCmd( "%i" % menuIndex, menuItemCallback)
+        menuIndex += 1
+
+    return ( menuStr, menuMap )
         
-        menu_str = menu_str + "%i) - %s\n" % (menu_index, item[0])
-        menu_trienode.add( "%i" % menu_index, item[1] )
-
-        menu_index += 1
-
-
-    return Menu( menu_str, Parser( lambda unused: [menu_trienode] ) )
-
-    
-    
-class Menu:
-
-    def __init__(self, string, parser):
-        self.str = string
-        self.parser = parser
-       
