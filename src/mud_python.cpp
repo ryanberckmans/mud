@@ -9,7 +9,8 @@ namespace python = boost::python;
 #include "mud_python_extract.hpp"
 #include "mud_python.hpp"
 
-BOOST_PYTHON_MODULE(mudTypes)
+
+BOOST_PYTHON_MODULE(cppTypes)
 {
   python::class_<std::vector<int> >("IntVector")
     .def( python::vector_indexing_suite< std::vector<int> >());
@@ -23,20 +24,19 @@ BOOST_PYTHON_MODULE(mudTypes)
 PythonWrapper::PythonWrapper() {
   
   Py_Initialize();
-  
+   
   try {
-    
+
+    /*
+      No more registration. Just export .so and load in python
     // Register module
-    if (PyImport_AppendInittab("mudTypes", initmudTypes ) == -1) {
-      throw std::runtime_error("Failed to add mudTypes to the interpreter's built in modules");
+    if (PyImport_AppendInittab("cppTypes", initcppTypes ) == -1) {
+      throw std::runtime_error("Failed to add cppTypes to the interpreter's built in modules");
     }
+    */
     
     python::object main = python::import("__main__");
-    
     dict = main.attr("__dict__");
-    
-    python::exec("from mudTypes import *\n", dict, dict);
-    
   }
   catch ( ... ) {
     python::handle_exception();
