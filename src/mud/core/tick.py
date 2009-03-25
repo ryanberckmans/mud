@@ -3,6 +3,7 @@ from cppTypes import *
 import loadMods
 import client
 import signals
+import color
 
 newClients = IntVector()
 disconnectedClients = IntVector()
@@ -13,6 +14,7 @@ clientMsgs = IntStringMap()
 ## HACK
 ## client needs clientMsgs to send ?? 
 def send( clientId, msg):
+    msg = color.color( msg + "{@")
     if clientId in clientMsgs:
         clientMsgs[clientId] = clientMsgs[clientId] + msg
     else:

@@ -48,8 +48,12 @@ class CmdMap:
         if len(cmd) == 0:
             return (self.defaultCallback, None)
 
-        return findFromNextToken( self, cmd )
-    
+        result = findFromNextToken( self, cmd )
+
+        if result[0] == self.defaultCallback:
+            return ( self.defaultCallback, cmd )
+
+        return result
 
     # @todo add noAllowAbbrev and callback data to str
     #       without breaking unit tests
