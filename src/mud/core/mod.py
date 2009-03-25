@@ -7,27 +7,22 @@ def connect( callback, signal ):
 
 def addCmd( cmd, callback, allowAbbrev=True ):
     rootCmdsMap.addCmd( cmd, callback, allowAbbrev )
-    rootCmdsList.append( cmd )
 
 ###############
 # INTERNAL ####
 ###############
 
-rootCmdsMap = cmdMap.CmdMap()
-rootCmdsList = []
+def invalidCmd( client, remaining ):
+    client.send("Invalid command. ({!{FCcommands{@ for help)\r\n")
 
+rootCmdsMap = cmdMap.CmdMap( invalidCmd )
 
 def addRootMap( client ):
     client.cmdHandlers.append( rootCmdsMap )
 
-def cmdList():
-    rootCmdsList.sort()
+def commands():
+    return rootCmdsMap.commands()
 
-    cmdsStr = "{!{FGCommands:{FC\r\n"
-    for cmd in rootCmdsList:
-        cmdsStr = cmdsStr + "%s\r\n" % cmd
-
-    return cmdsStr
 
 connect( addRootMap, signals.CONNECTED )
 

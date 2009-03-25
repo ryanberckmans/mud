@@ -16,6 +16,6 @@ welcomeMessage = """{@{!{FG     ________             ________
 
 
 def welcomeCallback( client ):
-    client.send( welcomeMessage % mod.cmdList() )
+    client.send( welcomeMessage % mod.commands() )
     
 mod.connect( welcomeCallback, signals.CONNECTED )

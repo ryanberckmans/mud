@@ -20,6 +20,7 @@ class CmdMap:
         self.defaultCallback = defaultCallback
         self.nextTokenNode = None
         self.allowAbbrev = True
+        self.cmdList = []
         self.__CMD_MAP__ = True
 
 
@@ -34,6 +35,7 @@ class CmdMap:
         """
         addCmdCheckPreconds( cmd, callback, allowAbbrev)
         addCmdFromNextToken( self, cmd, callback, allowAbbrev )
+        addCmdToList( self, cmd )
         return self
 
 
@@ -55,6 +57,19 @@ class CmdMap:
 
         return result
 
+    def cmds( self ):
+        return self.commands()
+
+    def commands( self ):
+        self.cmdList.sort()
+
+        cmdsStr = "{!{FGCommands:{FC\r\n"
+        for cmd in self.cmdList:
+            cmdsStr = cmdsStr + " %s\r\n" % cmd
+
+        return cmdsStr
+
+        
     # @todo add noAllowAbbrev and callback data to str
     #       without breaking unit tests
     def __str__helper(self, prefix=""):
@@ -158,4 +173,5 @@ def findFromNextToken( cmdMap, cmd):
     return (cmdMap.callback, cmdRemainingTokens)
 
     
-
+def addCmdToList( cmdMap, cmd ):
+    cmdMap.cmdList.append(cmd)
