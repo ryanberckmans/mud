@@ -58,6 +58,11 @@ def handleNextCmdForAllClients():
     for client in clients:
         handleNextCmdFromClient( clients[ client ] )
 
+### HACK
+def sendToAll( msg ):
+    for clientId in clients:
+        send( clientId, msg )
+### END HACK
 
 class Client:
 
