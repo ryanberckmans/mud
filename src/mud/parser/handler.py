@@ -1,5 +1,7 @@
 from types import StringType, FunctionType, ListType
 
+from exceptions import AbandonCallback
+
 import cmdMap
 
 def handleCmd( client, cmd, polymorphicVariable):

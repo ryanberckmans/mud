@@ -1,5 +1,7 @@
+from pydispatch import dispatcher
 from types import IntType, StringType
-from mud import parser
+from mud.parser import handler
+import signals
 
 
 clients = {}
@@ -19,7 +21,9 @@ def disconnectClient( clientId ):
 def newClient( clientId ):
     assert type(clientId) == IntType, "client.newClient received clientId that wasn't an int"
     assert not clientId in clients, "client.newClient received a duplicate clientId (%s)" % clientId
-    clients[ clientId ] = Client( clientId )
+    c = Client( clientId )
+    clients[ clientId ] = c
+    dispatcher.send( signals.CONNECTED, newClient, c )
 
 
 def flushCmdQueue( clientId ):
@@ -62,6 +66,10 @@ class Client:
         self.cmds = []
         self.cmdHandlers = []
 
+        # HACK
+        self.send = lambda msg: send( ID, msg )
+        # END HACK
+
 
 ##################
 # Internal #######
@@ -74,6 +82,6 @@ def handleNextCmdFromClient( client ):
     if len(client.cmdHandlers) == 0:
         return
 
-    parser.handler.handleCmd( client, client.cmds.pop(0), client.cmdHandlers[-1])
+    handler.handleCmd( client, client.cmds.pop(0), client.cmdHandlers[-1])
 
         

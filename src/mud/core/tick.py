@@ -1,4 +1,5 @@
 from cppTypes import *
+import loadMods
 import client
 
 newClients = IntVector()
@@ -11,9 +12,9 @@ clientMsgs = IntStringMap()
 ## client needs clientMsgs to send ?? 
 def send( clientId, msg):
     if clientId in clientMsgs:
-        msgs[clientId] = clientMsgs[clientId] + msg
+        clientMsgs[clientId] = clientMsgs[clientId] + msg
     else:
-        msgs[clientId] = msg
+        clientMsgs[clientId] = msg
 
 client.send = send
 ## END HACK

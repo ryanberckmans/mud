@@ -1,23 +1,24 @@
+from pydispatch import dispatcher
+import signals
+import mud.parser.cmdMap as cmdMap
 
-import util
-from trienode import TrieNode
-from parser import Parser
+def connect( callback, signal ):
+    dispatcher.connect( callback, signal )
 
-modTrie = TrieNode()
-
-def init():
-
-    mods = util.ls("./mods-enabled")
-
-    for mod in mods:
-        __import__(mod)
-        print "imported mod %s" % mod
+def addCmd( cmd, callback, allowAbbrev=True ):
+    regularCmdsMap.addCmd( cmd, callback, allowAbbrev )
 
 
-def parser():
-    return Parser( lambda static: [modTrie] )
 
+###############
+# INTERNAL ####
+###############
 
+regularCmdsMap = cmdMap.CmdMap()
+def addRegularMap( client ):
+    client.cmdHandlers.append( regularCmdsMap )
+
+connect( addRegularMap, signals.CONNECTED )
 
 
     
