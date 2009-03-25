@@ -9,7 +9,7 @@ namespace python = boost::python;
 #include "mud_python_extract.hpp"
 #include "mud_python.hpp"
 
-BOOST_PYTHON_MODULE(mud)
+BOOST_PYTHON_MODULE(mudTypes)
 {
   python::class_<std::vector<int> >("IntVector")
     .def( python::vector_indexing_suite< std::vector<int> >());
@@ -27,15 +27,15 @@ PythonWrapper::PythonWrapper() {
   try {
     
     // Register module
-    if (PyImport_AppendInittab("mud", initmud ) == -1) {
-      throw std::runtime_error("Failed to add mud to the interpreter's built in modules");
+    if (PyImport_AppendInittab("mudTypes", initmudTypes ) == -1) {
+      throw std::runtime_error("Failed to add mudTypes to the interpreter's built in modules");
     }
     
     python::object main = python::import("__main__");
     
     dict = main.attr("__dict__");
     
-    python::exec("from mud import *\n", dict, dict);
+    python::exec("from mudTypes import *\n", dict, dict);
     
   }
   catch ( ... ) {
@@ -77,6 +77,7 @@ void python_exec( char const * const script ) {
   catch ( ... ) {
     python::handle_exception();
     PyErr_Print();
+    throw 0;
   }
 }
 

@@ -32,7 +32,8 @@ void cmd_router::tick() {
   
   LOG_MED( CR, " TICK: " << _socket_data._cmds.size() << " cmds, " << _socket_data._new_cons.size() << " new, " << _socket_data._lost_link.size() << " lls, " << _socket_data._flushed.size() << " flushed");
   
-  python_exec_file("tick.py");
+
+  python_exec("mud.core.tick.tick()");
 
   // _socket_data._msgs was populated inside tick.py
   map< int, string >::iterator it = _socket_data._msgs.begin();

@@ -1,3 +1,3 @@
 print "hi from mud.core!"
 
-__all__ = []
+#__all__ = []
