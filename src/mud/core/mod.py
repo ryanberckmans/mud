@@ -21,6 +21,8 @@ def addRootMap( client ):
     client.cmdHandlers.append( rootCmdsMap )
 
 def cmdList():
+    rootCmdsList.sort()
+
     cmdsStr = "{!{FGCommands:{FC\r\n"
     for cmd in rootCmdsList:
         cmdsStr = cmdsStr + "%s\r\n" % cmd
