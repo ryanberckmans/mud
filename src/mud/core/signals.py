@@ -1,3 +1,7 @@
+from pydispatch import dispatcher
+
+def connect( callback, signal ):
+    dispatcher.connect( callback, signal )
 
 
 ## HACK - use Classes for signals now

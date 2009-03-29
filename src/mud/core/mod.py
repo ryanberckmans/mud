@@ -1,9 +1,8 @@
 from pydispatch import dispatcher
-import signals
 import mud.parser.cmdMap as cmdMap
-
-def connect( callback, signal ):
-    dispatcher.connect( callback, signal )
+from cmds import pushCmdHandler
+from send import sendToClient
+import signals
 
 def addCmd( cmd, callback, allowAbbrev=True ):
     rootCmdsMap.addCmd( cmd, callback, allowAbbrev )
@@ -12,24 +11,17 @@ def addCmd( cmd, callback, allowAbbrev=True ):
 # INTERNAL ####
 ###############
 
-def invalidCmd( client, remaining ):
-    client.send("Invalid command. ({!{FCcommands{@ for help)\r\n")
+def invalidCmd( clientId, remaining ):
+    sendToClient( clientId, "Invalid command. ({!{FCcommands{@ for help)\r\n")
 
 rootCmdsMap = cmdMap.CmdMap( invalidCmd )
 
-def addRootMap( client ):
-    client.cmdHandlers.append( rootCmdsMap )
+def addRootMap( clientId ):
+    pushCmdHandler( clientId, rootCmdsMap )
 
 def commands():
     return rootCmdsMap.commands()
 
-
-connect( addRootMap, signals.CONNECTED )
-
-
-
-
-
-    
+signals.connect( addRootMap, signals.CONNECTED )
 
 

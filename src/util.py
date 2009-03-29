@@ -1,6 +1,27 @@
 import string
 import re
-import os, sys, inspect
+import os, sys, inspect, types
+
+
+def isString( s ):
+    assert type(s) == types.StringType
+
+def isFunc( s ):
+    assert type(s) == types.FunctionType
+
+def isFunction( s ): isFunc (s)
+
+def isDict( s ):
+    assert type(s) == types.DictType
+
+def isInt( s ):
+    assert type(s) == types.IntType
+
+def isFloat( s ):
+    assert type(s) == types.FloatType
+
+def isList( s ):
+    assert type(s) == types.ListType
 
 
 # returns true if str contains only alphanumeric + underscore

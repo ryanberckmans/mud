@@ -1,26 +1,18 @@
 from pydispatch import dispatcher
 from cppTypes import *
+import send # HACK HACK
 import loadMods
+import cmds
 import client
 import signals
-import color
 
 newClients = IntVector()
 disconnectedClients = IntVector()
 flushedClients = IntVector()
 clientCmds = IntStringMap()
 clientMsgs = IntStringMap()
-
 ## HACK
-## client needs clientMsgs to send ?? 
-def send( clientId, msg):
-    msg = color.color( msg + "{@")
-    if clientId in clientMsgs:
-        clientMsgs[clientId] = clientMsgs[clientId] + msg
-    else:
-        clientMsgs[clientId] = msg
-
-client.send = send
+send.clientMsgs = clientMsgs
 ## END HACK
 
 def tick():
@@ -28,18 +20,18 @@ def tick():
     dispatcher.send( signals.BEFORE_TICK, tick )
 
     for clientId in disconnectedClients:
-        client.disconnectClient( clientId )
+        client.clientDisconnectedFromServer( clientId )
 
     for clientId in newClients:
-        client.newClient( clientId )
+        client.clientConnectedToServer( clientId )
 
     for clientId in flushedClients:
-        client.flushCmdQueue( clientId )
+        cmds.clientFlushedCmdQueue( clientId )
 
     for cmd in clientCmds:
-        client.queueCmd( cmd.key(), cmd.data() )
+        cmds.clientSentCmd( cmd.key(), cmd.data() )
 
-    client.handleNextCmdForAllClients()
+    cmds.handleNextCmdForAllClients()
 
     dispatcher.send( signals.AFTER_TICK, tick )
 

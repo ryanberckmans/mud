@@ -1,5 +1,5 @@
 from types import ListType, StringType, FunctionType
-import mud.parser.cmdMap as cmdMap
+import cmdMap
 
 def createMenu( menuPairs, defaultCallback = None ):
     """
