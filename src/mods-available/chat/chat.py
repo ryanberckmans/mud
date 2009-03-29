@@ -1,31 +1,22 @@
-import mud.core.mod as mod
-from mud.core.cmds import pushCmdHandler, popCmdHandler
+from mud.core.rootCmdMap import rootCmdMap
 from mud.core.send import sendToClient, sendToAll
-from mud.parser.cmdMap import CmdMap
+from mud.core.mode import Mode
 
 
 def cmdChat( clientId, remaining ):
     if not remaining or len(remaining) == 0:
         sendToClient( clientId, "Usage: chat msg\r\n")
         return
+
+    cmdChatFromMsg( clientId, remaining )
     
-    sendToAll("{!{FC%i chats to everybody, '%s'\r\n" % ( clientId, remaining ) )
 
-mod.addCmd( "chat", cmdChat )
-
-
-chatModeMap = CmdMap( cmdChat )
+def cmdChatFromMsg( clientId, msg):
+    sendToAll("{!{FC%i chats to everybody, '%s'\r\n" % ( clientId, msg ) )
 
 
-def cmdExitChatMode( clientId, remaining ):
-    popCmdHandler( clientId )
-    sendToClient( clientId, "{!{FG[{FYExiting Chat Mode{FG]\r\n")
+rootCmdMap.addCmd( "chat", cmdChat )
 
+chatMode = Mode("chat", "mode chat", cmdChatFromMsg, False )
+chatMode.register()
 
-chatModeMap.addCmd("!", cmdExitChatMode )
-
-def cmdEnterChatMode( clientId, remaining ):
-    pushCmdHandler( clientId, chatModeMap )
-    sendToClient( clientId, "\r\n{!{FG[{FYEntering Chat Mode{FG] {@({!{FC!{@ to exit)\r\n")
-
-mod.addCmd( "mode chat", cmdEnterChatMode )

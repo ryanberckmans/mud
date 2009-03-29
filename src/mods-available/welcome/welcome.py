@@ -1,4 +1,4 @@
-import mud.core.mod as mod
+from mud.core.rootCmdMap import rootCmdMap
 import mud.core.signals as signals
 from mud.core.send import sendToClient
 
@@ -7,6 +7,6 @@ welcomeMessage = """{@{!{FG     ________             ________ \r\n{FG    / ____ 
 
 
 def welcomeCallback( clientId ):
-    sendToClient( clientId, welcomeMessage % mod.commands() )
+    sendToClient( clientId, welcomeMessage % rootCmdMap.commands() )
     
 signals.connect( welcomeCallback, signals.CONNECTED )
