@@ -21,6 +21,8 @@ class Mode:
         def enterMode( clientId, remaining ):
             pushCmdHandler( clientId, self.modeMap )
             sendToClient( clientId, "\r\n{!{FG[{FYEntering %s mode{FG] {@({!{FC!{@ to exit)\r\n" % self.modeName)
+            if modeAddDefaultCmds:
+                sendToClient( clientId, self.modeMap.commands() )
 
         def exitMode( clientId, remaining ):
             popCmdHandler( clientId )
