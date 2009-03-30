@@ -23,6 +23,7 @@ class Mode:
             sendToClient( clientId, "\r\n{!{FG[{FYEntering %s mode{FG] {@({!{FC!{@ to exit)\r\n" % self.modeName)
             if modeAddDefaultCmds:
                 sendToClient( clientId, self.modeMap.commands() )
+            sendToClient( clientId, "\r\n" )
 
         def exitMode( clientId, remaining ):
             popCmdHandler( clientId )

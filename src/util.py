@@ -6,6 +6,8 @@ import os, sys, inspect, types
 def isString( s ):
     assert type(s) == types.StringType
 
+def isStr( s ): isString( s )
+
 def isFunc( s ):
     assert type(s) == types.FunctionType
 

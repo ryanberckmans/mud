@@ -1,31 +1,60 @@
-from types import ListType, StringType, FunctionType
-import cmdMap
+from util import isList, isStr, isFunc
+from mud.core.send import sendToClient
+from mud.core.cmds import popCmdHandler, pushCmdHandler
+from cmdMap import CmdMap
 
-def createMenu( menuPairs, defaultCallback = None ):
-    """
-    menuPairs: [ ( menuItemDescription, menuItemCallback ) ]
-    defaultCallback: the callback executed by the menu if an invalid option is selected
 
-    returns ( menuStr, menuMap )
-      menuStr: string repr of menu to send to clients
-      menuMap: CmdMap for the menu
-    """
 
-    assert type(menuPairs) == ListType, "menu.createMenu received menuPairs that wasn't a list"
-    if defaultCallback:
-        assert type(defaultCallback) == FunctionType, "menu.createMenu received defaultCallback that wasn't a function"
+def defaultInvalidSelectionCallback( clientId, menuStr ):
+    sendToClient( clientId, menuStr )
 
-    menuStr = ""
-    menuMap = CmdMap( defaultCallback )
-    menuIndex = 1
+def finishMenu( clientId, finishedCallback, value):
+    popCmdHandler( clientId )
+    finishedCallback( clientId, value )
 
-    for (menuItemDescription, menuItemCallback) in menuPairs:
-        assert type(menuItemDescription) == StringType, "Menu.createMenu received a menu item description that wasn't a string"
-        assert type(menuItemCallback) == FunctionType, "Menu.createMenu received a menu item callback that wasn't a function"
+class Menu:
 
-        menuStr = menuStr + "%i) - %s\r\n" % ( menuIndex, menuItemDescription )
-        menuMap.addCmd( "%i" % menuIndex, menuItemCallback)
-        menuIndex += 1
+    def __init__( self, menuPairs, finishedCallback, menuHeader = None, menuFooter = None, invalidSelectionCallback = None ):
+        """
+         menuPairs: [ ( menuItemDescription: str, menuItemValue: any type ) ]
+         finishedCallback: f( clientId, selectedValue )
+         invalidSelectionCallback: f( clientId, remaining )
+         """
+        isList( menuPairs)
+        isFunc( finishedCallback)
 
-    return ( menuStr, menuMap )
+        if invalidSelectionCallback:
+            isFunc( invalidSelectionCallback )
+        else:
+            invalidSelectionCallback = lambda clientId, remaining: defaultInvalidSelectionCallback( clientId, self.menuStr )
+
+        self.menuStr = "{!"
+        self.menuMap = CmdMap( invalidSelectionCallback )
+        menuIndex = 1
+
+        def finishMenuWithValue( value ):
+            return lambda clientId, remaining: finishMenu( clientId, finishedCallback, value )
+
+        for (menuItemDescription, menuItemValue) in menuPairs:
+            isStr( menuItemDescription)
+            self.menuStr = self.menuStr + "{FC%i{FG) - {FU%s\r\n" % ( menuIndex, menuItemDescription )
+            self.menuMap.addCmd( "%i" % menuIndex, finishMenuWithValue( menuItemValue ) )
+            menuIndex += 1
+
+        self.menuStr += "{@"
+            
+        if menuHeader:
+            isStr( menuHeader )
+            self.menuStr = menuHeader + self.menuStr
+
+        if menuFooter:
+            isStr( menuFooter )
+            self.menuStr = self.menuStr + menuFooter
+
+
+    def use( self, clientId ):
+        sendToClient( clientId, self.menuStr )
+        pushCmdHandler( clientId, self.menuMap )
+
         
+
