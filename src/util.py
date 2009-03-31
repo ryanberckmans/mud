@@ -5,25 +5,31 @@ import os, sys, inspect, types
 
 def isString( s ):
     assert type(s) == types.StringType
+    return True
 
-def isStr( s ): isString( s )
+def isStr( s ): return isString( s )
 
 def isFunc( s ):
     assert type(s) == types.FunctionType
+    return True
 
-def isFunction( s ): isFunc (s)
+def isFunction( s ): return isFunc (s)
 
 def isDict( s ):
     assert type(s) == types.DictType
+    return True
 
 def isInt( s ):
     assert type(s) == types.IntType
+    return True
 
 def isFloat( s ):
-    assert type(s) == types.FloatType
+    assert type(s) == types.FloatType or isInt( s )
+    return True
 
 def isList( s ):
     assert type(s) == types.ListType
+    return True
 
 
 # returns true if str contains only alphanumeric + underscore
