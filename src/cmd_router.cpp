@@ -6,7 +6,7 @@
 #include "cmd_router.hpp"
 
 
-#define TICK_LENGTH 2000
+#define TICK_LENGTH 250
 
 using namespace std;
 
