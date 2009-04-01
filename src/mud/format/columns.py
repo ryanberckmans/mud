@@ -58,9 +58,9 @@ def renderFromFunctions( renderFunctions, maxLength, columnSeparators ):
 def getEmptyColumnLine( width, columnSeparators ):
     EMPTY_COLUMN_LINE = "{@"
 
-    for i in range(1, width + SPACES_BETWEEN_COLUMNS + 1 ):
+    while( color.lenNoCodes(EMPTY_COLUMN_LINE) < width + SPACES_BETWEEN_COLUMNS ):
         EMPTY_COLUMN_LINE += " "
-
+            
     if columnSeparators:
         EMPTY_COLUMN_LINE = EMPTY_COLUMN_LINE[:-2] + COLUMN_SEPARATOR + " "
 
@@ -82,7 +82,7 @@ def getColumnRenderFunctions( columns, widths, columnSeparators ):
         if len(col) > 0:
             print "len col > 0 : %s " % col
             line = col.pop(0)
-            if ( len(line) > 0 ):
+            if ( color.lenNoCodes(line) > 0 ):
                 return line
         return emptyLine
         
@@ -116,7 +116,7 @@ def columnsFromStrings( strs, widths, columnSeparators ):
         isStr(s)
         columns.append([])
         width = widths.pop(0)
-        while( len(s) > 0 ):
+        while( color.lenNoCodes(s) > 0 ):
             newlineIndex = s.find("\r\n")
 
             if newlineIndex < 0:
@@ -133,23 +133,34 @@ def columnsFromStrings( strs, widths, columnSeparators ):
 
 
 def addStringToColumn( columns, width, s, columnSeparators ):
-    while( True ):
+    while True:
         columns[-1].append("")
 
-        if  len(s) == 0: break
-        
-        toAdd = s[:width] + "{@"
+        if color.lenNoCodes(s) == 0: break
 
-        while( len(toAdd) < width + SPACES_BETWEEN_COLUMNS + color.numCodes( toAdd ) ):
+        colorOffset = 0
+        while True:
+            newOffset = len(s[:width + colorOffset]) - color.lenNoCodes(s[:width + colorOffset])
+            if newOffset == colorOffset: break
+            colorOffset = newOffset
+                        
+        toAdd = s[:width+colorOffset] + "{@"
+        assert color.lenNoCodes(toAdd) <= width, toAdd
+
+        while( color.lenNoCodes(toAdd) < width + SPACES_BETWEEN_COLUMNS ):
             toAdd += " "
+
         if columnSeparators:
             toAdd = toAdd[:-2] + COLUMN_SEPARATOR + " "
         columns[-1][-1] += toAdd
 
         colorState = color.getColorState(s[:width])
 
-        s = str(colorState) + s[width:]
+        s = s[width + colorOffset:]
 
-        if len(s) == 0: break
+        if color.lenNoCodes(s) == 0: break
+        
+        s = str(colorState) + s
+
         
 

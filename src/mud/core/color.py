@@ -53,11 +53,22 @@ class ColorState:
         return state
 
 
-def numCodes( msg ):
+def lenNoCodes( msg ):
+    return len(msg) - lengthOfCodes( msg )
+
+def lenOfCodes( msg ):
+    return lengthOfCodes( msg )
+
+def lengthOfCodes( msg ):
     num = 0
-    for i in range( 0, len(msg)):
+    for i in range( 0, len(msg) ):
         if msg[i:i+3] in colorMacros:
-            num += 1
+            if msg[i+1:i+2] == "F" or msg[i+1:i+2] == "B":
+                num += 3
+            else:
+                num += 2
+        elif msg[i:i+2] in colorMacros:
+            num += 2
 
     return num
    
