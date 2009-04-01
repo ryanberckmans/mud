@@ -14,9 +14,9 @@ def finishMenu( clientId, finishedCallback, value):
 
 class Menu:
 
-    def __init__( self, menuPairs, finishedCallback, menuHeader = None, menuFooter = None, invalidSelectionCallback = None ):
+    def __init__( self, menuPairs, finishedCallback, invalidSelectionCallback = None ):
         """
-         menuPairs: [ ( menuItemDescription: str, menuItemValue: any type ) ]
+         menuPairs: [], each element is string or (string, any type)
          finishedCallback: f( clientId, selectedValue )
          invalidSelectionCallback: f( clientId, remaining )
          """
@@ -35,22 +35,20 @@ class Menu:
         def finishMenuWithValue( value ):
             return lambda clientId, remaining: finishMenu( clientId, finishedCallback, value )
 
-        for (menuItemDescription, menuItemValue) in menuPairs:
+        for item in menuPairs:
+            if type(item) == str:
+                self.menuStr += item + "\r\n"
+                continue
+
+            ( menuItemDescription, menuItemValue ) = item
+                
             isStr( menuItemDescription)
-            self.menuStr = self.menuStr + "{FC%i{FG) - {FU%s\r\n" % ( menuIndex, menuItemDescription )
+            self.menuStr = self.menuStr + " {FC%i{FG) - {FU%s\r\n" % ( menuIndex, menuItemDescription )
             self.menuMap.addCmd( "%i" % menuIndex, finishMenuWithValue( menuItemValue ) )
             menuIndex += 1
 
         self.menuStr += "{@"
             
-        if menuHeader:
-            isStr( menuHeader )
-            self.menuStr = menuHeader + self.menuStr
-
-        if menuFooter:
-            isStr( menuFooter )
-            self.menuStr = self.menuStr + menuFooter
-
 
     def use( self, clientId ):
         sendToClient( clientId, self.menuStr )
