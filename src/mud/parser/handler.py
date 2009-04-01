@@ -62,6 +62,7 @@ def handleCmdFromMaps( cmd, client, cmdMaps ):
                 callback( client, remaining)
             except AbandonCallback, e:
                 abandonedCallback = e.callback
+                continue
 
             return # handled!
 

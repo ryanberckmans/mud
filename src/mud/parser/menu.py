@@ -14,7 +14,7 @@ def finishMenu( clientId, finishedCallback, value):
 
 class Menu:
 
-    def __init__( self, menuPairs, finishedCallback, invalidSelectionCallback = None ):
+    def __init__( self, menuPairs, finishedCallback, invalidSelectionCallback = None, alphabeticOptions = False ):
         """
          menuPairs: [], each element is string or (string, any type)
          finishedCallback: f( clientId, selectedValue )
@@ -41,10 +41,16 @@ class Menu:
                 continue
 
             ( menuItemDescription, menuItemValue ) = item
+
+            optionLabel = ""
+            if alphabeticOptions:
+                optionLabel = chr(96 + menuIndex)
+            else:
+                optionLabel = menuIndex
                 
             isStr( menuItemDescription)
-            self.menuStr = self.menuStr + " {FC%i{FG) - {FU%s\r\n" % ( menuIndex, menuItemDescription )
-            self.menuMap.addCmd( "%i" % menuIndex, finishMenuWithValue( menuItemValue ) )
+            self.menuStr = self.menuStr + " {FC%s{FG) - {FU%s\r\n" % ( optionLabel, menuItemDescription )
+            self.menuMap.addCmd( "%s" % optionLabel, finishMenuWithValue( menuItemValue ) )
             menuIndex += 1
 
         self.menuStr += "{@"

@@ -2,6 +2,17 @@ import string
 import re
 import os, sys, inspect, types
 
+def newlines( i ):
+    return newline( i )
+
+def newline( i ):
+    isInt( i )
+    assert i > -1
+    nls = ""
+    for j in range(0, i+1):
+        nls += "\r\n"
+    return nls
+
 
 def isString( s ):
     assert type(s) == types.StringType

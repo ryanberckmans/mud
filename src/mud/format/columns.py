@@ -27,7 +27,7 @@ def toColumns( strs, widths, columnSeparators = False ):
     columns = columnsFromStrings( strs, widths[:], columnSeparators )
 
     maxLength = getMaxLengthFromColumns( columns )
-    print maxLength
+    #print maxLength
 
     renderFunctions = getColumnRenderFunctions( columns, widths[:], columnSeparators )
 
@@ -48,7 +48,7 @@ def renderFromFunctions( renderFunctions, maxLength, columnSeparators ):
     for row in range(1,maxLength+1):
         for f in renderFunctions:
             rendered += f()
-            print "BEGIN RENDERED%sEND RENDERED" % rendered
+            #print "BEGIN RENDERED%sEND RENDERED" % rendered
 
         rendered = rendered[: -1 * SPACES_BETWEEN_COLUMNS] # trim last spaces
         rendered += "\r\n"
@@ -75,25 +75,25 @@ def getColumnRenderFunctions( columns, widths, columnSeparators ):
     for width in widths:
         emptyLines.append( getEmptyColumnLine( width, columnSeparators ) )
 
-    print "Empty lines "
-    print emptyLines
+    #print "Empty lines "
+    #print emptyLines
 
     def render( col, emptyLine ):
         if len(col) > 0:
-            print "len col > 0 : %s " % col
+            #print "len col > 0 : %s " % col
             line = col.pop(0)
             if ( color.lenNoCodes(line) > 0 ):
                 return line
         return emptyLine
         
     def createRender( col, emptyLine ):
-        print "create render for col %s" % col
+        #print "create render for col %s" % col
         return lambda : render( col, emptyLine )
 
-    print len(columns)
-    print len(emptyLines)        
+    #print len(columns)
+    #print len(emptyLines)        
     for col in columns:
-        print "making render function for col %s" % str(col)
+        #print "making render function for col %s" % str(col)
         colRenderFunctions.append( createRender( col, emptyLines.pop(0) ) )
 
     return colRenderFunctions
@@ -104,7 +104,7 @@ def getMaxLengthFromColumns( columns ):
     for col in columns:
         if len(col) > maxLength:
             maxLength = len(col)
-            print "updated maxLength %s" % maxLength
+            #print "updated maxLength %s" % maxLength
 
     return maxLength
 
