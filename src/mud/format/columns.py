@@ -1,4 +1,5 @@
 from util import isStr, isList, isInt
+from mud.core import color
 
 SPACES_BETWEEN_COLUMNS = 3
 
@@ -55,7 +56,7 @@ def renderFromFunctions( renderFunctions, maxLength, columnSeparators ):
     return rendered
 
 def getEmptyColumnLine( width, columnSeparators ):
-    EMPTY_COLUMN_LINE = ""
+    EMPTY_COLUMN_LINE = "{@"
 
     for i in range(1, width + SPACES_BETWEEN_COLUMNS + 1 ):
         EMPTY_COLUMN_LINE += " "
@@ -124,7 +125,9 @@ def columnsFromStrings( strs, widths, columnSeparators ):
 
             addStringToColumn( columns, width, s[:newlineIndex ], columnSeparators )
 
-            s = s[newlineIndex + 2:]
+            colorState = color.getColorState(s[:newlineIndex])
+
+            s = str(colorState) + s[newlineIndex + 2:]
 
     return columns
 
@@ -135,14 +138,17 @@ def addStringToColumn( columns, width, s, columnSeparators ):
 
         if  len(s) == 0: break
         
-        toAdd = s[:width]
-        while( len(toAdd) < width + SPACES_BETWEEN_COLUMNS ):
+        toAdd = s[:width] + "{@"
+
+        while( len(toAdd) < width + SPACES_BETWEEN_COLUMNS + color.numCodes( toAdd ) ):
             toAdd += " "
         if columnSeparators:
             toAdd = toAdd[:-2] + COLUMN_SEPARATOR + " "
         columns[-1][-1] += toAdd
-        
-        s = s[width:]
+
+        colorState = color.getColorState(s[:width])
+
+        s = str(colorState) + s[width:]
 
         if len(s) == 0: break
         
