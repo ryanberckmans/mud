@@ -15,6 +15,9 @@ BOOST_PYTHON_MODULE(cppTypes)
   python::class_<std::vector<int> >("IntVector")
     .def( python::vector_indexing_suite< std::vector<int> >());
 
+  python::class_<std::vector<double> >("DoubleVector")
+    .def( python::vector_indexing_suite< std::vector<double> >());
+
   python::class_<std::map<int, std::string> >("IntStringMap")
     .def( python::map_indexing_suite< std::map< int, std::string>, true  >());
 

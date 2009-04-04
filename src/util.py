@@ -1,6 +1,17 @@
 import string
 import re
 import os, sys, inspect, types
+import cppTypes
+
+def toCpp( obj ):
+    if type(obj) == list:
+        if len(obj) == 0:
+            return cppTypes.IntVector()
+        if type(obj[0]) == float or type(obj[0]) == int:
+            vec = cppTypes.DoubleVector()
+            vec.extend( obj )
+            return vec
+
 
 def newlines( i ):
     return newline( i )
