@@ -1,0 +1,36 @@
+
+* migrating to SOA using twisted
+** service template
+*** we don't really need a svc template
+**** mud requires mods
+**** most services don't require mods
+**** not much shared code
+** twisted services
+*** twisted xmlrpc - can only receive and return basic datatypes
+*** endpoint configuration files, i.e. how to tell what url:port to point at
+*** TODO ? xmlrpc ssl
+*** TODO ? how do we authenticate xmlrpc
+*** what role does mods-enabled have in SOA?
+**** allows plugging of features, even if features are remote services 
+**** mods are really just libraries which may have no dependents
+**** a mod or library may point to a remote svc, but this is abstracted from the downstream
+*** what type of features should be mods?
+**** xmlrpc supports only basic datatypes, so features requiring tossing around complex data types shouldn't be mods.
+**** features with many upstreams can be mods, but then they may not be upstreams
+***** e.g. combat could be a mod, but it relies on equip, spell affects, etc, and how do we know something won't rely on combat?
+
+* migrating away from root c++
+** why?
+*** twistd
+*** replacing c++ socket server with twisted service
+** features that need migration
+*** socket server
+*** tick loop - what does this look like in SOA?
+**** naively, just transfers data from socket server to command handler
+
+* roadmap
+** migrate zr1 to service
+*** but it's two svcs
+*** the beam shopping cart, which is more or less current python zr1 impl
+*** the science layer, which is more or less current c++ zr1 impl
+*** start with c++
