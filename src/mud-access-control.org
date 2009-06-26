@@ -1,0 +1,121 @@
+
+* names:
+** general permissions system
+** permission service
+
+* motivation: allow access to X if Y
+** allow access to X, where X is
+*** an entire command
+**** purge
+**** restart
+**** high level spell
+*** a subcommand
+**** spell 'create' creates stronger stuff if Y
+*** a class of data
+**** purge jim iff Y
+**** edit room iff Y
+** allow access to X if Y, where Y is:
+ 
+* use case observations
+** definitely some common themes disguised as distinct use cases
+** permissions can be arbitrary boolean expressions. what else?
+*** if it is my zone "or" I have global zone access
+*** if I am a level 5 cleric or a level 10 mage
+*** if I am level 10 engineering, or (I have a rod of engineering wielded and 1000 mana)
+** how much of functionality should be captured by library, and how much of it can be handled by customers combining library primitives
+*** would you want to have a ">1000 mana" permission to cast a spell
+**** yes perspective ?
+***** could see using permissions library to declare private permissions, like hasMana(1000)
+***** then what does the perms library offer? why not just write a hasMana() function, or a private mobChecks lib, with no dependencies?
+**** no  perspective ?
+***** permissions lib doesn't contribute much to hasMana(), might as well be private lib.
+***** to what degree do we want permissions to be data-driven, or general? => what does perms do, and what doesn't it do?
+
+
+* possible roles for permissions system
+** infrastructure for commands/systems whose functionality depends on a permissions algorithm
+** option: only support features that are completely invisible if user fails permsalg
+*** purge doesn't show up as cmd if you're not in purge-group
+*** high level spell doesn't show up if you can't cast it
+*** this option decouples the groups system from permissions system
+*** this almost seems like an addition to the CmdMap API: addCmdIf( cmd, callback, boolean ) => this is dumb, just if X: addCmd
+**** allows for useful private usage:
+***** spell class container which takes spell-func, spell name, visibility conditions
+***** spell api add wraps CmdMap.addIf => foreach s in spells: if s.canUse( mob ): mob.cmdMap.addCmd( s.cmd, s.callback )
+***** this system looks conspicuously like the generic Command container 
+*** perhaps permissions allows for indexing/organizing of addIf bool funcs => what value ??
+** after analysis, it's looking like we don't need a centralized perms service, so much as well-architected subcomponents
+
+* subcomponents
+** SafeBlock
+*** doesn't really belong in this file, but Command could use it
+*** a simple factory which
+**** takes a function f
+**** returns a wrapper
+**** the wrapper forwards all parameters to f
+**** but jails f in try/catch/logging/alarms to avoid crashing the app
+*** allows others to code systems/commands/procs without crashing the app
+** Command container
+*** cmd - txt
+*** allowGroups - if a mob has any of these groups, they can use the command
+*** denyGroups  - if a mob has any of these groups, they cannot use the command.
+**** overrides allowGroups
+**** useful for stuff like freezing, not that we'll freeze people.
+*** bool addCondition( mob ) - returns true if the mob is eligible to access the command
+**** processes allowGroups, denyGroups
+**** as well as custom functionality
+*** useCondition - a wrapper for callback which encapsulates the workflow to check if this command succeeds.
+**** twisted deferred callbacks/errbacks are an excellent implementation alternative
+**** parameter checking 'telepath what player?'
+**** condition checking 'insufficient mana', 'you aren't holding the correct focus item'
+*** actual callback
+*** root callback - a wrapper that looks like: if ( useCondition( ... ) ): actualCallback( ... )
+**** in terms of twisted, this is the is a function that can be added to CmdMap, which launches the deffered sequence
+**** can also automatically wrap the command in a safeblock
+*** ? what parts of command are data driven:
+**** what about the groups necessary to use the command?
+**** parts of the useCondition, such as player level?
+** groups system
+*** who are groups assigned to?
+**** players
+**** mobs
+*** designed for linear growth use cases: group zone-13
+*** what sort of segregation do we want between groups of differing permanence, system/userland, rpg/tech, etc:
+**** e.g. purge-group, restart-group, god-level-5-group
+**** e.g. builder-group
+**** e.g. clan-20-group, engineer-group, hero-group
+**** group system should vend group collections
+**** allows us to separate app-level groups from engine-level groups and game-level groups
+*** group use cases
+**** leaf-node groups allow direct access to commands, subcommands, or classes of data
+***** mud-admin => restart, shutdown
+***** player-admin => purge
+***** mob-viewer => mob view
+***** mob-admin  => mob create
+***** zone-13 => edit rooms, mobs in zone 13
+**** internal-node 'virtual' groups aggregate leaf-node groups into roles
+***** should never be used in an actual command => possibly hard-enforce this in group system
+***** builder => mob-viewer, item-viewer, room-viewer, build-core. you would then add zone-XX manually to the assignee
+***** 140-god => mud-admin, player-admin
+**** what about groups for setting groups?
+***** you want to allow a middle manager to add group zone-13 to jim
+***** but do not want to allow middle manager to add group mud-admin to themself or jim
+***** architect this into group API
+****** e.g. createGroup( creator, groupName, controllerGroup /* the group you need to modify this group */, concrete=true /* i.e. not virtual */ )
+****** and createGroup() is hardcoded to require the creator to be in the group group-creator.
+***** we probably don't even want all groups to be visible to everybody: but we get this for free with group collections
+**** unless we want groups to be entirely hardcoded, we'll need data-driven groups infrastructure
+***** likely do not want hardcoded. need to touch code to change anything.
+***** players only exist in data, and we want to modify their groups, so already some group stuff has to be in data
+***** probably anything that has a set of groups, or touches groups, should be in data
+***** so a command needs a list of groups in db, etc
+**** groups must vend an anonymous groups tracking system
+***** e.g. my command's allowGroups are 1, 3, 7
+***** e.g. my zone's builder group is zone-37
+***** but groups must not know about how its customers choose to organize their use cases
+***** requires some kind of ( group_id, group_repository_id /* e.g. app-level group */, customer_id, group_category_id /* category id as defined by customer, anonymous to groups */ ) table
+****** although we may want a separate database per repository
+
+
+
+
