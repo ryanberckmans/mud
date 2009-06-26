@@ -73,9 +73,10 @@
 **** in terms of twisted, this is the is a function that can be added to CmdMap, which launches the deffered sequence
 **** can also automatically wrap the command in a safeblock
 *** ? what parts of command are data driven:
-**** what about the groups necessary to use the command?
 **** parts of the useCondition, such as player level?
-** groups system
+**** since groups are entirely in db, we want to src allowGroups and denyGroups from db, therefore commands scale per-cmd in db
+**** is there anything else we want to put in db on a per-command basis?
+** groups system mud.core.groups
 *** who are groups assigned to?
 **** players
 **** mobs
@@ -115,6 +116,79 @@
 ***** but groups must not know about how its customers choose to organize their use cases
 ***** requires some kind of ( group_id, group_repository_id /* e.g. app-level group */, customer_id, group_category_id /* category id as defined by customer, anonymous to groups */ ) table
 ****** although we may want a separate database per repository
+
+* configuration
+** what is this? => different instances of the app use different configurations
+** use cases
+*** database endpoints for everything
+*** two peer prod instances different sections of the world
+*** a beta instance uses beta dbs
+*** a prod instance is a building instance
+*** a prod instance runs a different type of world, e.g. medlink
+*** a prod instance is the "PK" realm, and uses a different player/persistence db
+
+* databases
+** possible types/partitioning
+*** shared across all beta/prod buildmode/runmode instances "static class"
+**** template db: zones, mobs, items.. any non-instance
+**** engine groups: mob-viewer, mud-admin
+*** shared across a subset of instances representing one game world "world class"
+**** player, clan, economy db
+**** what-region db: disallows replication for anything that can move between regions
+***** this is sort of an adjunct onto persistent mob db
+***** what about persistent items... anything that would transition between regions?
+***** alternative: no what-region db
+****** no persistent db, keep all persistent things attached to the persistent entity
+****** when transitioning regions, commit to db, unlock the record, and destroy the memory
+****** receiving region locks db and loads record
+****** would only have to lock 'root entity'.. i.e. mob
+***** can anything besides mobs initiate moves between regions? items can't move themselves! and a tank should be a mob-container?
+***** need regionable concept: mob models regionable, transition APIs model regionable, anything modeling regionable can transition
+**** persistent mob db would be "world class"
+***** players are the only persistent mobs atm
+***** armies/pets would be persistent mobs, too
+*** unshared per prod instance "region class"
+**** specifies which subset of world exists on this instance
+**** specifies endpoints which go to/from other regions
+*** local persistence "zone class"
+**** this is the class of db med doesn't have. resets kill everything in zone
+**** we haven't decided on level of persistence yet
+*** engine dbs
+**** static groups: mob-viewer
+*** game dbs
+** dbs could vary on at least three dimensions: beta/prod, engine/game, and level of persistence
+** idea: don't vary across engine/game; vastly reduces complexity
+*** otherwise when you group add newgroup, how do you know what db to put it in?
+*** beta/prod variation is transparent
+** problem:
+*** growing groups linearly with zones could work, because they can all be static groups in a builder db, and not even exist in runmode
+*** but there are groups which exist in build mode, which also exist in run mode, and how do we separate those from groups that we don't want to exist in runmode?
+*** growing groups linearly with clans has a stronger issue.. doesn't exist in buildmode, and in runmode it's world class not static class.
+*** possible solution:
+**** static_group_db = "engine_groups" /* beta_ prod_ */
+**** world_group_db  = "builder_world_groups" /* beta_ prod_ */
+**** world_group_db  = "beta_realm_world_groups" /* beta only */
+**** world_group_db  = "jim_realm_world_groups" /* prod only, contains rpg groups for this realm */
+**** theme:
+***** certain dbs are coupled with buildmode, others with runmode
+***** only engine groups are omnipresent: highly static, exist in beta/prod x buildmode/runmode
+** therefore *the vast majority of data is only available at the [beta/prod] x [builder/world-instance] level*
+** new problem: for what use cases is context necessary to determine if data goes into engine or world db
+*** groups - can add engine group, or world group. => use different command for engine group
+** use case table:
+
+| data type               constant across: | beta/prod | build/run | world |                                                                            |
+|------------------------------------------+-----------+-----------+-------+----------------------------------------------------------------------------|
+| clan groups e.g. clan23                  | N         | N         | N     | build mode is regular + build features; so clans, etc work                 |
+| mob/item/clan/rpg persistent instances   | N         | N         | N     |                                                                            |
+| instance data                            | N         | N         | N     | rpg instances, rpg groups                                                  |
+|                                          | N         | Y         | N     | this configuration can't exist                                             |
+| builder zone groups                      | N         | N         | Y     | builder zone groups don't exist in run, and there's only one builder world |
+| mob/zone/item/room templates             | N         | Y         | Y     |                                                                            |
+|                                          | Y         | N         | Y     | this configuration can't exist                                             |
+| engine groups                            | Y         | Y         | Y     |                                                                            |
+| spells                                   | Y         | Y         | Y     | spells aren't in db                                                        |
+
 
 
 
