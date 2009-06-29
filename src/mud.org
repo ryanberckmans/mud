@@ -1,3 +1,4 @@
+#+TAGS: BUILDING(b)
 
 * migrating to SOA using twisted
 ** service template
@@ -28,9 +29,17 @@
 *** tick loop - what does this look like in SOA?
 **** naively, just transfers data from socket server to command handler
 
-* roadmap
-** migrate zr1 to service
-*** but it's two svcs
-*** the beam shopping cart, which is more or less current python zr1 impl
-*** the science layer, which is more or less current c++ zr1 impl
-*** start with c++
+* important considerations
+** builder tools
+** starting content ahead of time
+** single dota zone, to flesh out builder tools/mechanics
+** multiple worlds <=> multiple servers ?
+*** medlink world
+*** global commands spanning worlds
+
+* feature list
+
+* next steps
+** think about unit tests/model based testing/integration tests
+** migrate wiki to org
+** update and work on wiki road map
