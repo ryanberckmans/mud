@@ -196,3 +196,22 @@
 
 
 
+
+* database impl
+** use cases
+*** returns a database name formatted as a universal database
+*** returns a database name formatted as a world database
+** tests
+*** I can set the universe
+*** I can set the world
+*** db prefix must be a string
+*** db world must be a string
+*** a universal db != world db
+** interface
+*** db.type { STATIC, INSTANCE }
+*** WORLD
+*** setPrefix( string )
+*** setInstance( string )
+*** getInstanceDB( name, 
+
+
