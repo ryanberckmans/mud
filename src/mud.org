@@ -2,6 +2,7 @@
 
 * Tasks
 ** TODO upgrade sqlalchemy
+** TODO logging
 ** TODO change python-mode to correct version
 ** TODO code groups, and groups are constant across all worlds        :STORY:
 ** TODO code Commands, using the check/groups system we talked about  :STORY:
