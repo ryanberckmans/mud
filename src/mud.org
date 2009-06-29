@@ -1,4 +1,15 @@
-#+TAGS: BUILDING(b)
+#+TAGS: BUILDING(b) STORY(s)
+
+* Tasks
+** TODO upgrade sqlalchemy
+** TODO change python-mode to correct version
+** TODO code groups, and groups are constant across all worlds        :STORY:
+** TODO code Commands, using the check/groups system we talked about  :STORY:
+** TODO code mobs, where we have templates, and everything else is permanent :STORY:
+** TODO code rooms like mobs, with no concept of zones yet            :STORY:
+** TODO code "assume control of mob X"                                :STORY:
+** TODO code basic zones                                              :STORY:
+** TODO code "10.5.37" reference thing                                :STORY:
 
 * migrating to SOA using twisted
 ** service template
@@ -36,14 +47,4 @@
 ** multiple worlds <=> multiple servers ?
 *** medlink world
 *** global commands spanning worlds
-
-
-
-* code groups, and groups are constant across all worlds
-* code Commands, using the check/groups system we talked about
-* code mobs, where we have templates, and everything else is permanent
-* code rooms like mobs, with no concept of zones yet
-* code "assume control of mob X"
-* code basic zones
-* code "10.5.37" reference thing
 
