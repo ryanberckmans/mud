@@ -37,9 +37,13 @@
 *** medlink world
 *** global commands spanning worlds
 
-* feature list
 
-* next steps
-** think about unit tests/model based testing/integration tests
-** migrate wiki to org
-** update and work on wiki road map
+
+* code groups, and groups are constant across all worlds
+* code Commands, using the check/groups system we talked about
+* code mobs, where we have templates, and everything else is permanent
+* code rooms like mobs, with no concept of zones yet
+* code "assume control of mob X"
+* code basic zones
+* code "10.5.37" reference thing
+
