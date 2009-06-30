@@ -5,7 +5,12 @@
    CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
 ** TODO logging
-** TODO change python-mode to correct version
+** TODO implement db layer
+*** TODO implement tests for returned session object
+*** TODO impl db config mods for BETA, STATIC, and INSTANCE
+*** TODO write sql to bootstrap db to work with config
+** DONE change python-mode to correct version
+   CLOSED: [2009-06-29 Mon 23:24]
 ** TODO code groups, and groups are constant across all worlds        :STORY:
 ** TODO code Commands, using the check/groups system we talked about  :STORY:
 ** TODO code mobs, where we have templates, and everything else is permanent :STORY:
