@@ -1,6 +1,7 @@
 #+TAGS: BUILDING(b) STORY(s)
 
 * Tasks
+** TODO fix unit tests
 ** TODO upgrade sqlalchemy
 ** TODO logging
 ** TODO change python-mode to correct version
