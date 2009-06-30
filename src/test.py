@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+def asserts( s, *args ):
+    """
+    test.asserts is intended to be called by objects deriving from unittest.TestCase
+    """
+    s.assertRaises(AssertionError, *args )
+    
 def loadTestModules():
     import mud
 
