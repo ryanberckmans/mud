@@ -24,6 +24,8 @@
 ** DONE update __init__ strings to "package initialized" instead of hi from...
    CLOSED: [2009-06-29 Mon 20:37]
 
+** TODO convert ftm git to pure repository
+
 * migrating to SOA using twisted
 ** service template
 *** we don't really need a svc template
