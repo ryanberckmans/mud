@@ -1,1 +1,2 @@
-print  "hi from unittests!"
+print "imported package: %s" % __name__
+

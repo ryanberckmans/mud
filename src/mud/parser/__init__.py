@@ -1,1 +1,2 @@
-print "hi from parser!"
+print "imported package: %s" % __name__
+

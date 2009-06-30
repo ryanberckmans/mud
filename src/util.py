@@ -25,6 +25,10 @@ def newline( i ):
     return nls
 
 
+def isDefined( s ):
+    assert s != None
+    return True
+
 def isString( s ):
     assert type(s) == types.StringType
     return True

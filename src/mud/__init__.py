@@ -1,3 +1,3 @@
-print "hi from mud!"
+print "imported package: %s" % __name__
 
 __all__ = ["parser", "core", "format" ]
