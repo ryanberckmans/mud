@@ -1,7 +1,8 @@
 #+TAGS: BUILDING(b) STORY(s)
 
 * Tasks
-** TODO fix unit tests
+** DONE fix unit tests
+   CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
 ** TODO logging
 ** TODO change python-mode to correct version
@@ -15,7 +16,8 @@
 
 
 * Minor Tasks
-** TODO update __init__ strings to "package initialized" instead of hi from...
+** DONE update __init__ strings to "package initialized" instead of hi from...
+   CLOSED: [2009-06-29 Mon 20:37]
 
 * migrating to SOA using twisted
 ** service template
