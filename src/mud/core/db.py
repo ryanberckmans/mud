@@ -3,48 +3,58 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from util import isString, isDefined
 
-dbPrefix = ""
-dbTypes = {}
-dbEngines = {}
+class DBMetaData:
+    def __init__(self):
+        self.prefix = ""
+        self.types = {}
 
-def setPrefix( prefix ):
-    isString( prefix )
+    def setPrefix( self, prefix ):
+        """
+        sets the prefix on all dbms database names, e.g. 'BETA'
+        
+        prefix: string
+        """
+        isString( prefix )
+        self.prefix = prefix
 
-    dbPrefix = prefix    
+    def setType( self, typeName, typeValue ):
+        """
+        maps a database type, e.g. 'WORLD', to a database type value, e.g 'LAZARUS'
+        
+        typeName : string
+        typeValue: string
+            
+        this map is injective, i.e. values are distinct
+        """
+        isString( typeName )
+        isString( typeValue )
+            
+        assert typeName not in self.types
+        for t in self.types:
+            assert self.types[ t ] != typeValue
+            
+        self.types[ typeName ] = typeValue
 
-def setType( typeName, typeValue ):
-    isString( typeName )
-    isString( typeValue )
+data = DBMetaData()
 
-    assert typeName not in dbTypes
-    
-    dbTypes[ typeName ] = typeValue
+def getSession( dbName, dbType, declarativeBase, metadata=data ):
+    """
+    returns a threadsafe sqlalchemy session, used to access an underlying data model, as described by declarativeBase
+    e.g. session.commit(), session.add(user)
 
-def getSession( dbName, dbType, declarativeBase ):
+    dbName         : string, the logical database name, e.g. 'MOB_DESCRIPTIONS'
+    dbType         : string, the persistence type class, e.g. 'STATIC', 'INSTANCE'
+    declarativeBase: an instance of sqlalchemy.ext.declarative.declarative_base
+    """
     isString( dbName )
     isString( dbType )
     isDefined( declarativeBase )
 
-    assert dbType in dbTypes
+    assert dbType in metadata.types
     
-    dbActualName = "%s_%s_%s" % (dbPrefix, dbName, dbTypes[ dbType ])
-    engine = None
+    dbActualName = "%s_%s_%s" % (metadata.prefix, dbName, metadata.types[ dbType ])
 
-    if (dbActualName in dbEngines ):
-        raise EngineAlreadyExists()
-    else:
-        dbEngines[ dbActualName ] = create_engine('mysql://muduser:mudpass@localhost/%s' % dbActualName )
-        engine = dbEngines[ dbActualName ]
-        metadata.create_all(engine) 
+    engine = create_engine('mysql://muduser:mudpass@localhost/%s' % dbActualName )
+    declarativeBase.metadata.create_all(engine) 
     
-    metadata.create_all(engine) 
-
     return scoped_session(sessionmaker(bind=engine))
-
-
-
-class EngineAlreadyExists(Exception):
-    def __init__(self):
-        pass
-
-    
