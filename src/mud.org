@@ -1,4 +1,4 @@
-#+TAGS: BUILDING(b) STORY(s)
+#+TAGS: BUILDING(b) STORY(s) TWISTED(t)
 
 * Stuff to talk to Carl about 6/30
 ** online versus hardcoded
@@ -38,17 +38,16 @@
    CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
 ** TODO logging
-** TODO implement db layer
 ** TODO convert isString to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
+** TODO implement db layer
 *** TODO implement tests for returned session object
 *** TODO impl db config mods for BETA, STATIC, and INSTANCE
 *** TODO write sql to bootstrap db to work with config
 ** DONE change python-mode to correct version
    CLOSED: [2009-06-29 Mon 23:24]
-** TODO groups, and groups are constant across all worlds             :STORY:
-** TODO Commands, using the check/groups system we talked about       :STORY:
-** TODO commands exist and wrap callbacks in validation chain         :STORY:
-** TODO commands have list of allowed/denied groups                   :STORY:
+** TODO groups, and groups are constant across all worlds     :STORY:TWISTED:
+** TODO commands exist and wrap callbacks in validation chain :STORY:TWISTED:
+** TODO commands have list of allowed/denied groups           :STORY:TWISTED:
 ** TODO zone templates, saving to db                                  :STORY:
 ** TODO zone deployments, saving to db, but no instances              :STORY:
 ** TODO zone deployments trigger, saving instances to db              :STORY:
