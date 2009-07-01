@@ -38,6 +38,8 @@
 ** DONE fix unit tests
    CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
+** TODO implement private client system - clientTracker?
+** TODO switch systems over to private client system
 ** TODO logging
 ** TODO investigate sqlalchemy blocking/defer to thread/session issue :TWISTED:
 ** TODO convert isString to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
