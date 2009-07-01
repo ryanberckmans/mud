@@ -1,6 +1,6 @@
 #+TAGS: BUILDING(b) STORY(s)
 
-* Stuff to talk to Carl about
+* Stuff to talk to Carl about 6/30
 ** online versus hardcoded
 *** group creation/deletion/relationships online? 
 **** easier and almost as useful to hardcode this, and have no db
