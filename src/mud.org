@@ -1,11 +1,45 @@
 #+TAGS: BUILDING(b) STORY(s)
 
+* Stuff to talk to Carl about
+** online versus hardcoded
+*** group creation/deletion/relationships online? 
+**** easier and almost as useful to hardcode this, and have no db
+**** note: hardcore parent/child group relationships, too
+**** => store mob's groups in db and nothing else?
+**** won't allow any other instanced entity to have a list of groups => this is fine for now
+**** therefore "groups aren't data"
+*** commands online isn't worth it
+**** very little homogeneity complicates data model
+**** cmd modification is, compared to use, rare
+**** therefore "cmds aren't data"
+*** mob/zone-to-prod workflow
+**** start mud in build-mode
+**** create a zone -> zone 15
+**** mob new     // in zone 15 mob library
+***** certain attribs default, such as owning zone
+***** set attribs
+***** save mob    // saves static, inst default data
+**** mob deploy  // in zone 15 deploy library
+***** default inst, deply attribs // e.g. default to 1 mob, 100% probability, state standing, deployment owning zone
+***** set deploy data // e.g. # mobs, scripts/procs for this deploy group, deploy trigger
+***** set inst data   // e.g. start location(s)
+***** save deployment // into deployment table
+***** general idea: any value can have probalistic partitioning
+**** zone deploy
+***** schedule once instance of new zone for dp, same as mob deploy, saves into deployment table
+**** start mud in run-mode
+***** mud loads zone deployments, sees new zone dp
+***** zone dp loads mob dps, sees new mob dp
+***** when dp triggers, our new mob spawns
+**** problem: this path is fine for new worlds, but 99% of time we load an existing world with existing instances
+
 * Tasks
 ** DONE fix unit tests
    CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
 ** TODO logging
 ** TODO implement db layer
+** TODO convert isString to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
 *** TODO implement tests for returned session object
 *** TODO impl db config mods for BETA, STATIC, and INSTANCE
 *** TODO write sql to bootstrap db to work with config

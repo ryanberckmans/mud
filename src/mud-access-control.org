@@ -56,7 +56,7 @@
 **** but jails f in try/catch/logging/alarms to avoid crashing the app
 *** allows others to code systems/commands/procs without crashing the app
 ** Command container
-*** cmd - txt
+*** cmd - list of aliases
 *** allowGroups - if a mob has any of these groups, they can use the command
 *** denyGroups  - if a mob has any of these groups, they cannot use the command.
 **** overrides allowGroups
@@ -115,12 +115,19 @@
 ***** e.g. my zone's builder group is zone-37
 ***** but groups must not know about how its customers choose to organize their use cases
 ***** requires some kind of ( group_id, group_repository_id /* e.g. app-level group */, customer_id, group_category_id /* category id as defined by customer, anonymous to groups */ ) table
-****** although we may want a separate database per repository
+***** what about anonymous ( parent_group_id, anon_child_id, relationship_owner, relationship_category )
+***** this really comes down to is, to what level do we want to hardcode usage of groups?
+****** add/remove mobs from groups online
+****** what about online group creation/deletion? use cases?
+****** groups, in general, cause different behaviour for the members of the group.
+******* do we want to model group relationships online?
+******* will these relationships change that often?
 
 * configuration
 ** what is this? => different instances of the app use different configurations
 ** use cases
 *** database endpoints for everything
+*** port the mud runs on    
 *** two peer prod instances different sections of the world
 *** a beta instance uses beta dbs
 *** a prod instance is a building instance
