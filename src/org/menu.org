@@ -1,0 +1,53 @@
+
+* value selector use cases
+** pick 1, 2, or 3
+*** client may choose to be responsible for push cmdmap, push prompt, display menu first time
+*** selector supplies convenience function to activate, too
+*** invalid is default callback => displays menu
+*** valid calls selection callback with # 
+*** => callback pops cmdmap, pops prompt, processes #
+*** selector supplies deactivate convenience function
+** riddle: get right answer first time or die in flames
+*** valid calls selection, deactivates menu, correct answer passes, wrong flames
+*** invalid callback => same as valid with wrong answer
+** pick a function
+*** same as numberical, except process function
+** terminate selector as if it never happened
+*** handled client side, as value which indicates deactivate and do nothing
+** specify a unique behaviour if the selection is invalid
+*** invalid callback overridden
+** stay in selector until you pick the right value
+*** client side selection callback detects incorrect value, doesn't deactivate
+
+* input handled by selector's map can be
+** invalid option => calls default or custom invalid callback; custom includes abandon handling
+** valid option => calls selection callback with value 
+
+* client usage
+** menu str
+** menu prompt
+** menu cmdmap
+
+* tests 
+** init
+*** empty menu asserts
+*** menu item descriptions are strings
+*** each menu item is a pair
+*** selectionCallback is func
+*** invalidCallback is func
+*** useAlpha is bool
+** prompt/menu
+*** generates a string for a 1-item menu
+*** generates a string for a 2-item menu
+*** generates a string for a 5-item menu
+** menu string
+*** same as prompt
+** menu cmdmap
+*** generates a cmdmap for 1,2,5 item
+** invalid selection
+*** invalid selection goes to default callback
+*** invalid callback overrides
+** valid selection
+*** valid selection
+*** calls selection with correct value in 1,2,5-item menu
+
