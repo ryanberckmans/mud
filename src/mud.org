@@ -47,9 +47,14 @@
    CLOSED: [2009-06-29 Mon 23:24]
 ** TODO groups, and groups are constant across all worlds             :STORY:
 ** TODO Commands, using the check/groups system we talked about       :STORY:
+** TODO commands exist and wrap callbacks in validation chain         :STORY:
+** TODO commands have list of allowed/denied groups                   :STORY:
 ** TODO zone templates, saving to db                                  :STORY:
 ** TODO zone deployments, saving to db, but no instances              :STORY:
 ** TODO zone deployments trigger, saving instances to db              :STORY:
+** TODO mob templates, saving to db                                   :STORY:
+** TODO mob deployments, saving to db, but no instances               :STORY:
+** TODO mob deployments trigger, saving instances to db               :STORY:
 ** TODO code mobs, where we have templates, and everything else is permanent :STORY:
 ** TODO code rooms like mobs, with no concept of zones yet            :STORY:
 ** TODO code "assume control of mob X"                                :STORY:
