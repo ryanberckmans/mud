@@ -1,0 +1,4 @@
+
+* form use cases
+** new account, fill name, password twice, optional email, automatically prompt for each successive item, highlight current item
+** char creation, select class, 20 points to distribute, optional desc
