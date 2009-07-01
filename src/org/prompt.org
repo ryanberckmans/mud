@@ -1,0 +1,41 @@
+
+
+* clientTracker tests
+** init
+*** addFunc is func
+** client adding
+*** non-int clientId asserts
+*** existing clientId asserts
+*** clientId is added
+*** addFunc is called with clientId
+** client deleting
+*** non-int clientId asserts
+*** non-existent clientId asserts
+*** clientId is deleted
+
+** client checking
+*** non-int clientId asserts
+*** non-existent clientId returns false
+*** existing client returns true
+
+
+* prompt tests
+** prompt object
+*** empty prompt returns epsilon
+*** prompt passes data
+*** push x returns x
+*** push then pop results in original
+*** push then push then pop 2 results in original
+*** pop negative number fails
+*** push requires func
+*** pop requires int
+*** pop 0 idempotent
+** module bindings
+*** display requires clientId int
+*** display requires valid clientId
+*** push requires clientId int
+*** push requires valid clientId
+*** pop requires clientId int
+*** pop requirs valid clientId
+
+

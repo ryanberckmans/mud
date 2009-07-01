@@ -3,6 +3,7 @@ from cppTypes import *
 import send # HACK HACK
 import loadMods
 import cmds
+import prompt
 import client
 import signals
 
@@ -32,6 +33,11 @@ def tick():
         cmds.clientSentCmd( cmd.key(), cmd.data() )
 
     cmds.handleNextCmdForAllClients()
+
+    def keys( intStringMap ):
+        return map( lambda i: i.key(), intStringMap )
+
+    map( lambda clientId: send.sendToClient( clientId, prompt.prompt( clientId, clientId ) )  ,  list(set( keys( clientCmds ) ).union( keys( send.clientMsgs ) ) ) )
 
     dispatcher.send( signals.AFTER_TICK, tick )
 
