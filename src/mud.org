@@ -51,6 +51,10 @@
 ** TODO mobs can have groups                                          :STORY:
 ** TODO commands exist and wrap callbacks in validation chain :STORY:TWISTED:
 ** TODO commands have list of allowed/denied groups           :STORY:TWISTED:
+** TODO prompts
+** TODO fill-in-the-blanks form widget
+** TODO input string widget
+** TODO value selector
 ** TODO zone templates, saving to db                                  :STORY:
 ** TODO zone deployments, saving to db, but no instances              :STORY:
 ** TODO zone deployments trigger, saving instances to db              :STORY:
