@@ -32,12 +32,14 @@
 ***** zone dp loads mob dps, sees new mob dp
 ***** when dp triggers, our new mob spawns
 **** problem: this path is fine for new worlds, but 99% of time we load an existing world with existing instances
+***** => deploy tracking/engines
 
 * Tasks
 ** DONE fix unit tests
    CLOSED: [2009-06-29 Mon 20:36]
 ** TODO upgrade sqlalchemy
 ** TODO logging
+** TODO investigate sqlalchemy blocking/defer to thread/session issue :TWISTED:
 ** TODO convert isString to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
 ** TODO implement db layer
 *** TODO implement tests for returned session object
@@ -45,7 +47,8 @@
 *** TODO write sql to bootstrap db to work with config
 ** DONE change python-mode to correct version
    CLOSED: [2009-06-29 Mon 23:24]
-** TODO groups, and groups are constant across all worlds     :STORY:TWISTED:
+** TODO hardcoded groups, and mobs can't have groups                  :STORY:
+** TODO mobs can have groups                                          :STORY:
 ** TODO commands exist and wrap callbacks in validation chain :STORY:TWISTED:
 ** TODO commands have list of allowed/denied groups           :STORY:TWISTED:
 ** TODO zone templates, saving to db                                  :STORY:
@@ -60,8 +63,7 @@
 ** TODO code basic zones                                              :STORY:
 ** TODO code "10.5.37" reference thing                                :STORY:
 
-
-* Minor Tasks
+* Ancillary Tasks
 ** DONE update __init__ strings to "package initialized" instead of hi from...
    CLOSED: [2009-06-29 Mon 20:37]
 
