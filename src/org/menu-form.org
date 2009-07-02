@@ -2,3 +2,20 @@
 * form use cases
 ** new account, fill name, password twice, optional email, automatically prompt for each successive item, highlight current item
 ** char creation, select class, 20 points to distribute, optional desc
+** nesting of menus to arbitrary depth   
+** column support, so selected submenu appears in new column
+Edit Item                       | Set Item Location     | Select Value
+1) Name    : dagger of fire     | a) light  : true      | 1) true
+2) Location: [editing]          | b) finger : [editing] | 2) false
+   ...                          | ..
+
+* input path
+** valid input
+** invalid input
+** submit/done/commit/finish
+*** submit function
+** abort
+*** how to roll back?
+*** same as submission, without calling submit function ?
+**** but submission *is* submit function; may need abort function ?
+
