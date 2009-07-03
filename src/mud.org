@@ -40,6 +40,8 @@
 ** TODO upgrade sqlalchemy
 ** DONE implement clientTracker
    CLOSED: [2009-06-30 Tue 23:39]
+** TODO update ValueSelector to permit invalidSelectionCallback=None
+*** allows CmdMap to fail normally without explicitly throwing AbandonCallback
 ** TODO make cmdMap case insensitive
 ** TODO switch cmds to clientTracker
 ** TODO private signals
