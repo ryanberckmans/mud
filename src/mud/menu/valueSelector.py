@@ -59,10 +59,10 @@ class ValueSelector:
 
             self.menu += " {FC%s{FC) - {FU%s" % ( itemLabel, itemDesc ) + endl
 
-            def selectItemFunction( selectedValue ):
+            def getItemSelectedFunction( selectedValue ):
                 return lambda clientId, remaining: selectionCallback( clientId, selectedValue )
             
-            self.cmdMap.addCmd( "%s" % itemLabel, selectItemFunction( itemValue ) )
+            self.cmdMap.addCmd( "%s" % itemLabel, getItemSelectedFunction( itemValue ) )
             menuIndex += 1
 
         self.menu += "{@"

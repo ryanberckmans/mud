@@ -11,11 +11,20 @@ Edit Item                       | Set Item Location     | Select Value
 
 * input path
 ** valid input
+*** set itemValueDesc to [editing]
+**** possible by converting updateMenu to two-stage "create lines, concat lines"
+**** the cmdMap callback has the index to update baked in
+**** this will get unset next time the menu is updated
+*** itemSelectedFunction()
 ** invalid input
 ** submit/done/commit/finish
 *** submit function
 ** abort
-*** how to roll back?
-*** same as submission, without calling submit function ?
-**** but submission *is* submit function; may need abort function ?
+*** call submit with abort value
+
+* api
+** init( menuItems: ( itemDesc, itemSelectedFunction, itemValueDescFunction )
+** _updateMenu
+*** problem: menu is dynamic, but its served to all players
+**** option: use a clientTracker and cache menus
 
