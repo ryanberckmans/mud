@@ -41,9 +41,11 @@
 ** DONE implement clientTracker
    CLOSED: [2009-06-30 Tue 23:39]
 ** TODO switch cmds to clientTracker
+** TODO private signals
+** TODO clientTracker provides private signals
 ** TODO logging
 ** TODO investigate sqlalchemy blocking/defer to thread/session issue :TWISTED:
-** TODO convert isString to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
+** TODO convert is-functionals to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
 ** TODO implement db layer
 *** TODO implement tests for returned session object
 *** TODO impl db config mods for BETA, STATIC, and INSTANCE
@@ -54,10 +56,12 @@
 ** TODO mobs can have groups                                          :STORY:
 ** TODO commands exist and wrap callbacks in validation chain :STORY:TWISTED:
 ** TODO commands have list of allowed/denied groups           :STORY:TWISTED:
-** TODO prompts
+** DONE prompts
+   CLOSED: [2009-07-02 Thu 23:28]
 ** TODO fill-in-the-blanks form widget
 ** TODO input string widget
-** TODO value selector
+** DONE value selector
+   CLOSED: [2009-07-02 Thu 23:28]
 ** TODO zone templates, saving to db                                  :STORY:
 ** TODO zone deployments, saving to db, but no instances              :STORY:
 ** TODO zone deployments trigger, saving instances to db              :STORY:
