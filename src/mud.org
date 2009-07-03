@@ -40,6 +40,7 @@
 ** TODO upgrade sqlalchemy
 ** DONE implement clientTracker
    CLOSED: [2009-06-30 Tue 23:39]
+** TODO make cmdMap case insensitive
 ** TODO switch cmds to clientTracker
 ** TODO private signals
 ** TODO clientTracker provides private signals
