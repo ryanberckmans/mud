@@ -14,7 +14,7 @@ class DBMetaData:
         
         prefix: string
         """
-        isString( prefix )
+        assert isString( prefix )
         self.prefix = prefix
 
     def setType( self, typeName, typeValue ):
@@ -26,8 +26,8 @@ class DBMetaData:
             
         this map is injective, i.e. values are distinct
         """
-        isString( typeName )
-        isString( typeValue )
+        assert isString( typeName )
+        assert isString( typeValue )
             
         assert typeName not in self.types
         for t in self.types:
@@ -46,8 +46,8 @@ def getSession( dbName, dbType, declarativeBase, metadata=data ):
     dbType         : string, the persistence type class, e.g. 'STATIC', 'INSTANCE'
     declarativeBase: an instance of sqlalchemy.ext.declarative.declarative_base
     """
-    isString( dbName )
-    isString( dbType )
+    assert isString( dbName )
+    assert isString( dbType )
     isDefined( declarativeBase )
 
     assert dbType in metadata.types

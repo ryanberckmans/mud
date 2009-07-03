@@ -31,8 +31,10 @@
 * tests 
 ** init
 *** empty menu asserts
+*** menuItems are list
 *** menu item descriptions are strings
-*** each menu item is a pair
+*** men items may be tuples or strs
+*** menu items that are tuples are pairs
 *** selectionCallback is func
 *** invalidCallback is func
 *** useAlpha is bool

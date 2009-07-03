@@ -7,7 +7,7 @@ clients = {}
 
 def clientSentCmd( clientId, cmd ):
     isClient( clientId )
-    isString( cmd )
+    assert isString( cmd )
     clients[ clientId ].cmds.append( cmd )
 
 

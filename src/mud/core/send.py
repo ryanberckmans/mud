@@ -17,7 +17,7 @@ def sendToAll( msg ):
 
 def sendToClientFromID( clientId, msg ):
     """ Internal use only """
-    isString( msg )
+    assert isString( msg )
     msg = color.color( msg + "{@")
     if clientId in clientMsgs:
         clientMsgs[clientId] = clientMsgs[clientId] + msg

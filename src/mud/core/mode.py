@@ -8,8 +8,8 @@ from rootCmdMap import rootCmdMap
 class Mode:
 
     def __init__( self, modeName, modeCmd, modeDefaultCallback = None, modeAddDefaultCmds = True ):
-        isString( modeCmd )
-        isString( modeName )
+        assert isString( modeCmd )
+        assert isString( modeName )
 
         if not modeDefaultCallback:
             modeDefaultCallback = lambda clientId, remaining: sendToClient( clientId, "Invalid %s mode command. ({!{FC!{@ to exit, {!{FCcommands{@ for help)\r\n" % self.modeName )

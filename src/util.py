@@ -1,14 +1,17 @@
 import string
 import re
-import os, sys, inspect, types
+import os, sys, inspect
+from types import *
 import cppTypes
+
+endl = "\r\n"
 
 def toCpp( obj ):
     if type(obj) == list:
         if len(obj) == 0:
-            return cppTypes.IntVector()
+            return cppIntVector()
         if type(obj[0]) == float or type(obj[0]) == int:
-            vec = cppTypes.DoubleVector()
+            vec = cppDoubleVector()
             vec.extend( obj )
             return vec
 
@@ -25,36 +28,46 @@ def newline( i ):
     return nls
 
 
+def typeCheck( s, t ):
+    if ( type(s) == t ):
+        return True
+    return False
+
+def isBool( s ):
+    return typeCheck( s, BooleanType )
+
+def isTuple( s ):
+    return typeCheck( s, TupleType )
+
 def isDefined( s ):
     assert s != None
     return True
 
 def isString( s ):
-    assert type(s) == types.StringType
-    return True
+    return typeCheck( s, StringType )
 
 def isStr( s ): return isString( s )
 
 def isFunc( s ):
-    assert type(s) == types.FunctionType
+    assert type(s) == FunctionType
     return True
 
 def isFunction( s ): return isFunc (s)
 
 def isDict( s ):
-    assert type(s) == types.DictType
+    assert type(s) == DictType
     return True
 
 def isInt( s ):
-    assert type(s) == types.IntType
+    assert type(s) == IntType
     return True
 
 def isFloat( s ):
-    assert type(s) == types.FloatType or isInt( s )
+    assert type(s) == FloatType or isInt( s )
     return True
 
 def isList( s ):
-    assert type(s) == types.ListType
+    assert type(s) == ListType
     return True
 
 

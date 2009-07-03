@@ -1,4 +1,5 @@
 import unittest
+from util import isString
 from test import asserts
 from .. import prompt
 
@@ -8,7 +9,7 @@ class TestPromptObject(unittest.TestCase):
         self.prompt = prompt._Prompt( 0 )
 
     def test_promptEmptyReturnsEpsilon( self ):
-        self.assert_( self.prompt.prompt( None ) == "" )
+        self.assert_( isString( self.prompt.prompt( None )) )
 
     def test_promptPushPersists( self ):
         self.prompt.pushPrompt( lambda x: "bob" )
@@ -21,7 +22,7 @@ class TestPromptObject(unittest.TestCase):
     def test_promptPushPopIdempotent( self ):
         self.prompt.pushPrompt( lambda x: "bob" )
         self.prompt.popPrompt()
-        self.assert_( self.prompt.prompt( None ) == "" )
+        self.assert_( isString( self.prompt.prompt( None )) )
         self.prompt.pushPrompt( lambda x: x )
         self.prompt.pushPrompt( lambda x: "jim" )
         self.prompt.popPrompt()
@@ -31,7 +32,7 @@ class TestPromptObject(unittest.TestCase):
         self.prompt.pushPrompt( lambda x: "bob" )
         self.prompt.pushPrompt( lambda x: "bob" )
         self.prompt.popPrompt( 2 )
-        self.assert_( self.prompt.prompt( None ) == "" )
+        self.assert_( isString( self.prompt.prompt( None )) )
 
     def test_promptPopNPositive( self ):
         asserts( self, self.prompt.popPrompt, -1 )
