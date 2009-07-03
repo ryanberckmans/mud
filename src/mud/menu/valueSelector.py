@@ -1,9 +1,15 @@
-from util import isList, isTuple, isString, isFunc, isBool, endl
+from util import isList, isTuple, isString, isFunc, isBool, isDefined, endl
+from mud.core.send import sendToClient
+from mud.core.prompt import pushPrompt
+from mud.core.cmds import pushCmdHandler
 from mud.parser.cmdMap import CmdMap
+
+def defaultInvalidSelectionCallback( clientId, menuStr ):
+    sendToClient( clientId, menuStr )
 
 class ValueSelector:
 
-    def __init__( self, menuItems, selectionCallback, invalidSelectionCallback = lambda x:x, alphabeticOptions = False ):
+    def __init__( self, menuItems, selectionCallback, invalidSelectionCallback = None, alphabeticOptions = False ):
         """
         creates a menu widget, used to prompt the user to select a value from a set
 
@@ -21,7 +27,10 @@ class ValueSelector:
         """
         assert isList( menuItems )
         assert isFunc( selectionCallback )
-        assert isFunc( invalidSelectionCallback )
+        if ( isDefined( invalidSelectionCallback ) ):
+            assert isFunc( invalidSelectionCallback )
+        else:
+            invalidSelectionCallback = defaultInvalidSelectionCallback
         assert isBool( alphabeticOptions )
         
         assert len(menuItems) > 0
@@ -29,6 +38,8 @@ class ValueSelector:
         self.prompt = ""
         self.menu   = ""
         self.cmdMap = CmdMap( invalidSelectionCallback )
+
+        menuIndex = 1
 
         for item in menuItems:
             if isString( item ):
@@ -41,8 +52,25 @@ class ValueSelector:
             ( itemDesc, itemValue ) = item
             
             assert isString( itemDesc )
-            
 
+            itemLabel = menuIndex
+            if alphabeticOptions:
+                itemLabel = chr(96 + menuIndex )
+
+            self.menu += " {FC%s{FC) - {FU%s" % ( itemLabel, itemDesc ) + endl
+            self.cmdMap.addCmd( "%s" % itemLabel, lambda clientId, remaining: selectionCallback( clientId, itemValue ) )
+            menuIndex += 1
+
+        self.menu += "{@"
+            
+    def activate( self, clientId ):
+        """
+        convenience function. pushes menu cmdMap and prompt, and displays menu
+        """
+        pushCmdHandler( clientId, self.cmdMap )
+        pushPrompt( clientId, lambda x: self.prompt )
+        sendToClient( clientId, self.menu )
+        
                 
             
                 

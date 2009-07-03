@@ -56,16 +56,16 @@ class TestDBGetSession(unittest.TestCase):
         asserts( self, db.getSession, "", "", None )
 
     def test_getSessionTwice(self):
-        isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
 
     def test_getSessionTwoDBsSameType(self):
-        isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        isDefined( db.getSession("TEST2", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST2", "test-type", self.base, db.data ) )
 
     def test_getSessionTwoDBsDifferentType(self):
-        isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        isDefined( db.getSession("TEST2", "test-type2", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSession("TEST2", "test-type2", self.base, db.data ) )
 
 #    def test_findDefaultCallbackFromEpsilon(self):
 #        self.assert_( call(self.map.find("")) == "default" )

@@ -48,7 +48,7 @@ def getSession( dbName, dbType, declarativeBase, metadata=data ):
     """
     assert isString( dbName )
     assert isString( dbType )
-    isDefined( declarativeBase )
+    assert isDefined( declarativeBase )
 
     assert dbType in metadata.types
     

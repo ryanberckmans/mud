@@ -40,8 +40,7 @@ def isTuple( s ):
     return typeCheck( s, TupleType )
 
 def isDefined( s ):
-    assert s != None
-    return True
+    return s != None
 
 def isString( s ):
     return typeCheck( s, StringType )

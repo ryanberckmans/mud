@@ -11,7 +11,7 @@ def pushPrompt( clientId, promptFunc ):
 
     tracker.clients[ clientId ].pushPrompt( promptFunc )
 
-def popPrompt( clientId, n ):
+def popPrompt( clientId, n = None ):
     assert tracker.isClient( clientId )
 
     if ( isDefined( n ) ):
