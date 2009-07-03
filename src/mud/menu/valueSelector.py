@@ -36,7 +36,7 @@ class ValueSelector:
         assert len(menuItems) > 0
 
         self.prompt = ""
-        self.menu   = ""
+        self.menu   = "{!"
         self.cmdMap = CmdMap( invalidSelectionCallback )
 
         menuIndex = 1
@@ -58,7 +58,11 @@ class ValueSelector:
                 itemLabel = chr(96 + menuIndex )
 
             self.menu += " {FC%s{FC) - {FU%s" % ( itemLabel, itemDesc ) + endl
-            self.cmdMap.addCmd( "%s" % itemLabel, lambda clientId, remaining: selectionCallback( clientId, itemValue ) )
+
+            def selectItemFunction( selectedValue ):
+                return lambda clientId, remaining: selectionCallback( clientId, selectedValue )
+            
+            self.cmdMap.addCmd( "%s" % itemLabel, selectItemFunction( itemValue ) )
             menuIndex += 1
 
         self.menu += "{@"
