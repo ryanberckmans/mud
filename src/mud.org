@@ -47,6 +47,7 @@
 ** TODO private signals
 ** TODO clientTracker provides private signals
 ** TODO logging
+** TODO enhance colors; code to push/pop color state, enables "make color cyan, then go back to whatever it was"
 ** TODO investigate sqlalchemy blocking/defer to thread/session issue :TWISTED:
 ** TODO convert is-functionals to non-assert, check return values. enables support of assert isString( x ) or isInt( x )
 ** TODO implement db layer
