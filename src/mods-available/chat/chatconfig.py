@@ -18,13 +18,17 @@ def colorValueDescFunc( clientId ):
     return "<select a color>"
 
 menuItems = [
-    endl + "Chat Configuration:",
+    endl + "{FYChat Configuration:",
     ( "font color", colorMenu.menu.activate, colorValueDescFunc ),
     ]
 
 
-form = Form( menuItems, lambda x: x )
-form.prompt = endl + "{!{FBselect an option >"
+def finishCallback( clientId ):
+    popCmdHandler( clientId )
+    popPrompt( clientId )
+
+form = Form( menuItems, finishCallback )
+form.prompt = endl + "{!{FB<select an option>"
 menu = form.menu
 
-rootCmdMap.addCmd( "chatconfig", lambda clientId, remaining: form.activate( clientId ) )
+rootCmdMap.addCmd( "config chat", lambda clientId, remaining: form.activate( clientId ) )

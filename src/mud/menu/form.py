@@ -37,6 +37,7 @@ class Form:
 
         menuIndex = 1
 
+        self.cmdMap.addCmd( "f", lambda clientId, remaining: submitCallback( clientId ) )
         for item in self.menuItems:
             if isString( item ):
                 continue
@@ -85,6 +86,7 @@ class Form:
 
             menuIndex += 1
 
+        menu += " {FCf{FG) finish " + endl
 
         return menu
 

@@ -1,6 +1,7 @@
 from mud.core.rootCmdMap import rootCmdMap
 from mud.core.send import sendToClient, sendToAll
 from mud.core.mode import Mode
+from chatconfig import colorMenu
 
 
 def cmdChat( clientId, remaining ):
@@ -12,7 +13,11 @@ def cmdChat( clientId, remaining ):
     
 
 def cmdChatFromMsg( clientId, msg):
-    sendToAll("{!{FC%i chats to everybody, '%s'\r\n" % ( clientId, msg ) )
+    color = "{FC"
+    if clientId in colorMenu.colors:
+        color = colorMenu.colors[ clientId ]
+
+    sendToAll("{!{FC%i chats to everybody, '%s%s{FC'\r\n" % ( clientId, color, msg ) )
 
 
 rootCmdMap.addCmd( "chat", cmdChat )
