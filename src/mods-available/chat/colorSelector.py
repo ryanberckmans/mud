@@ -21,6 +21,6 @@ class ColorSelector:
             selectionCallback( clientId )
 
         self.menu = valueSelector.ValueSelector( menuItems, colorSelected, "DEFAULT", True )
-        self.menu.prompt = endl + "{!{FBselect a color >"
+        self.menu.prompt = endl + "{!{FB<select a color>"
 
 
