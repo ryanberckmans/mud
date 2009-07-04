@@ -1,6 +1,9 @@
 
 * form use cases
 ** new account, fill name, password twice, optional email, automatically prompt for each successive item, highlight current item
+*** this is not a use case.
+*** we do not prompt for each succesive item, or highlight current item, although we'd like to display [editing]
+*** menu-form is strictly for use cases where the sequence of selections is determined entirely by the user
 ** char creation, select class, 20 points to distribute, optional desc
 ** nesting of menus to arbitrary depth   
 ** column support, so selected submenu appears in new column
@@ -8,6 +11,17 @@ Edit Item                       | Set Item Location     | Select Value
 1) Name    : dagger of fire     | a) light  : true      | 1) true
 2) Location: [editing]          | b) finger : [editing] | 2) false
    ...                          | ..
+
+* editing
+** itemSelectedFunc responsible for telling itemValueDescFunc to display [editing]
+** i.e. menu-form doesn't support [editing] explicitly
+
+* menu generation
+** get all item descs for clientId
+** assemble menu
+
+* prompt generation
+** only static prompts for now
 
 * input path
 ** valid input
@@ -17,14 +31,31 @@ Edit Item                       | Set Item Location     | Select Value
 **** this will get unset next time the menu is updated
 *** itemSelectedFunction()
 ** invalid input
+*** invalidSelectionCallback()
 ** submit/done/commit/finish
-*** submit function
+*** option: submit function => has advantage of consistent binding "F", "A" for abort
+*** option: no submit function, like abort, handled entirely by client
+*** => let's use submitCallback( clientId, abort = False ), so we can have consistent bindings F/A
+**** submitDesc, abortDesc=None /None means disallow abort/
 ** abort
 *** call submit with abort value
+*** this can be handled entirely by the client => itemSelectedFunction can call submissionFunction with abortValue
+*** => call submitCallback( clientId, abort = True )
+
+* tests
+** init
+*** menuItems list
+*** no empty form
+*** each menuItem str or tuple
+*** tuples are len 3
+*** itemDesc string
+*** itemSelectedFunction func
+*** itemValueDescFunction func
+*** submitCallback func
+*** invalidSelectioncallback func
+*** alphabeticOptions bool
 
 * api
-** init( menuItems: ( itemDesc, itemSelectedFunction, itemValueDescFunction )
-** _updateMenu
-*** problem: menu is dynamic, but its served to all players
-**** option: use a clientTracker and cache menus
+** init( menuItems: ( itemDesc, itemSelectedFunction, itemValueDescFunction ), submitCallback, invalidSelectionCallback, alphabeticOptions = False )
+** menu( clientId )
 

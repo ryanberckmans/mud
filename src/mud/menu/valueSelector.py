@@ -57,7 +57,7 @@ class ValueSelector:
             if alphabeticOptions:
                 itemLabel = chr(96 + menuIndex )
 
-            self.menu += " {FC%s{FC) - {FU%s" % ( itemLabel, itemDesc ) + endl
+            self.menu += " {FC%s{FG) - {FU%s" % ( itemLabel, itemDesc ) + endl
 
             def getItemSelectedFunction( selectedValue ):
                 return lambda clientId, remaining: selectionCallback( clientId, selectedValue )
