@@ -1,0 +1,34 @@
+
+* zone template
+** data 
+*** template id
+*** zone name
+** zone list
+*** dump template id, zone name
+** zone new
+*** open zone form
+**** finish -> commit
+**** abort  -> discard
+**** zone id unavailable, since db generates
+** zone edit [#]
+*** pipe zone list to selector, with abort
+*** open zone form
+**** lock zone
+**** finish -> commit
+**** abort  -> rollback
+**** zone id specified
+** components
+*** zone template dao
+*** zone template form
+
+* zone deploy
+** data
+*** deployment id
+*** zone to deploy
+
+* zone instance
+** data
+*** owning deployment id
+*** template id
+*** instance id
+
