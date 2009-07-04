@@ -4,12 +4,12 @@ from mud.core.prompt import pushPrompt
 from mud.core.cmds import pushCmdHandler
 from mud.parser.cmdMap import CmdMap
 
-def defaultInvalidSelectionCallback( clientId, menuStr ):
-    sendToClient( clientId, menuStr )
+def defaultInvalidSelectionCallback( clientId, menu ):
+    sendToClient( clientId, menu )
 
 class ValueSelector:
 
-    def __init__( self, menuItems, selectionCallback, invalidSelectionCallback = None, alphabeticOptions = False ):
+    def __init__( self, menuItems, selectionCallback, invalidSelectionCallback = "DEFAULT", alphabeticOptions = False ):
         """
         creates a menu widget, used to prompt the user to select a value from a set
 
@@ -27,16 +27,23 @@ class ValueSelector:
         """
         assert isList( menuItems )
         assert isFunc( selectionCallback )
-        if ( isDefined( invalidSelectionCallback ) ):
-            assert isFunc( invalidSelectionCallback )
-        else:
-            invalidSelectionCallback = defaultInvalidSelectionCallback
         assert isBool( alphabeticOptions )
         
         assert len(menuItems) > 0
 
-        self.prompt = ""
+
         self.menu   = "{!"
+
+        # invalidSelectionCallback may be:
+        #  "DEFAULT" - an internal hack to bind to self.menu
+        #  None      - meaning an invalid selection defers to a later cmdHandler
+        #  Func      - a client-supplied invalidSelectionCallback
+        if invalidSelectionCallback == "DEFAULT":
+            invalidSelectionCallback = lambda clientId, remaining: defaultInvalidSelectionCallback( clientId, self.menu )
+        if ( isDefined( invalidSelectionCallback ) ):
+            assert isFunc( invalidSelectionCallback )
+        
+        self.prompt = ""        
         self.cmdMap = CmdMap( invalidSelectionCallback )
 
         menuIndex = 1

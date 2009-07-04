@@ -48,7 +48,7 @@ def isString( s ):
 def isStr( s ): return isString( s )
 
 def isFunc( s ):
-    assert type(s) == FunctionType
+    assert type(s) == FunctionType or type(s) == MethodType
     return True
 
 def isFunction( s ): return isFunc (s)

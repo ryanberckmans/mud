@@ -1,8 +1,8 @@
 
 colorMacros = {
-        "{@"    :     "\033[m",
+        "{@"    :     "\033[m", #reset
     	# styles
-    	"{!"       :     "\033[1m",
+    	"{!"       :     "\033[1m", #bold
     	"underlineZZ"  :     "\033[4m",
     	"blinkZZ"      :     "\033[5m",
     	"reverseZZ"    :     "\033[7m",
