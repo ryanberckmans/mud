@@ -43,6 +43,8 @@
 ** TODO update ValueSelector to permit invalidSelectionCallback=None
 *** allows CmdMap to fail normally without explicitly throwing AbandonCallback
 ** TODO make cmdMap case insensitive
+** TODO fix cmdMap bug
+** TODO allow prioritization of mods
 ** TODO switch cmds to clientTracker
 ** TODO private signals
 ** TODO clientTracker provides private signals
