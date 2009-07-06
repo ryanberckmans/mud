@@ -10,6 +10,8 @@ def finishCallback( clientId, session, abort = False ):
     else:
         session.commit()
 
+    session.close()
+
     popCmdHandler( clientId )
     popPrompt( clientId )
 

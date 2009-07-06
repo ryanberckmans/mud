@@ -5,11 +5,14 @@ from zoneTemplate import getSession, ZoneTemplate
 
 
 def zoneList( clientId, remaining ):
-    zoneTemplates = getSession().query(ZoneTemplate).all()
+    session = getSession()
+    zoneTemplates = session.query(ZoneTemplate).all()
 
     zones = "{!{FGZone Templates:{FC" + endl
     for zt in zoneTemplates:
         zones += " " + str(zt) + endl
+
+    session.close()
 
     sendToClient( clientId, zones )
     

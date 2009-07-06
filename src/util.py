@@ -16,6 +16,12 @@ def toCpp( obj ):
             return vec
 
 
+def toInt( s ):
+    try:
+        return int(s)
+    except ValueError:
+        return None
+
 def newlines( i ):
     return newline( i )
 
