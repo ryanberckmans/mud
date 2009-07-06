@@ -18,7 +18,7 @@ class ZoneTemplate(_Base):
         self.name = "Unnamed Zone"
 
     def __str__( self ):
-        return "zone %s, " % (self.id, self.name )
+        return "zone %s, %s" % (self.id, self.name )
 
 _DB_NAME = "WORLD"
 _DB_TYPE = "STATIC"
