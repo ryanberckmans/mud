@@ -37,10 +37,10 @@ class DBMetaData:
 
 data = DBMetaData()
 
-def getSession( dbName, dbType, declarativeBase, metadata=data ):
+def getSessionFactory( dbName, dbType, declarativeBase, metadata=data ):
     """
-    returns a threadsafe sqlalchemy session, used to access an underlying data model, as described by declarativeBase
-    e.g. session.commit(), session.add(user)
+    returns an sqlalchemy sessionmaker, used to access an underlying data model, as described by declarativeBase
+    e.g. s = session(), s.commit(), s.add(user)
 
     dbName         : string, the logical database name, e.g. 'MOB_DESCRIPTIONS'
     dbType         : string, the persistence type class, e.g. 'STATIC', 'INSTANCE'
@@ -52,9 +52,9 @@ def getSession( dbName, dbType, declarativeBase, metadata=data ):
 
     assert dbType in metadata.types
     
-    dbActualName = "%s_%s_%s" % (metadata.prefix, dbName, metadata.types[ dbType ])
+    dbActualName = "%s_%s_%s" % (metadata.prefix, metadata.types[ dbType ], dbName)
 
     engine = create_engine('mysql://muduser:mudpass@localhost/%s' % dbActualName )
     declarativeBase.metadata.create_all(engine) 
     
-    return scoped_session(sessionmaker(bind=engine))
+    return sessionmaker(bind=engine)

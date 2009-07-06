@@ -48,24 +48,24 @@ class TestDBGetSession(unittest.TestCase):
         from sqlalchemy.ext.declarative import declarative_base
         self.base = declarative_base()
         
-    def test_getSessionParamsNotString(self):
-        asserts( self, db.getSession, 3, None, None )
-        asserts( self, db.getSession, "", 3, None )
+    def test_getSessionFactoryParamsNotString(self):
+        asserts( self, db.getSessionFactory, 3, None, None )
+        asserts( self, db.getSessionFactory, "", 3, None )
 
-    def test_getSessionBaseNone(self):
-        asserts( self, db.getSession, "", "", None )
+    def test_getSessionFactoryBaseNone(self):
+        asserts( self, db.getSessionFactory, "", "", None )
 
-    def test_getSessionTwice(self):
-        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
+    def test_getSessionFactoryTwice(self):
+        assert isDefined( db.getSessionFactory("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSessionFactory("TEST", "test-type", self.base, db.data ) )
 
-    def test_getSessionTwoDBsSameType(self):
-        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        assert isDefined( db.getSession("TEST2", "test-type", self.base, db.data ) )
+    def test_getSessionFactoryTwoDBsSameType(self):
+        assert isDefined( db.getSessionFactory("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSessionFactory("TEST2", "test-type", self.base, db.data ) )
 
-    def test_getSessionTwoDBsDifferentType(self):
-        assert isDefined( db.getSession("TEST", "test-type", self.base, db.data ) )
-        assert isDefined( db.getSession("TEST2", "test-type2", self.base, db.data ) )
+    def test_getSessionFactoryTwoDBsDifferentType(self):
+        assert isDefined( db.getSessionFactory("TEST", "test-type", self.base, db.data ) )
+        assert isDefined( db.getSessionFactory("TEST2", "test-type2", self.base, db.data ) )
 
 #    def test_findDefaultCallbackFromEpsilon(self):
 #        self.assert_( call(self.map.find("")) == "default" )

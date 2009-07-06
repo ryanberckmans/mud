@@ -23,7 +23,7 @@ menuItems = [
     ]
 
 
-def finishCallback( clientId ):
+def finishCallback( clientId, abort = False ):
     popCmdHandler( clientId )
     popPrompt( clientId )
 
