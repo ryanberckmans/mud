@@ -4,6 +4,7 @@
 ** prompt is just <text input>
 
 * text editor ops
+** display text
 ** append
 ** insert line
 ** delelete line

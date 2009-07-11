@@ -34,6 +34,7 @@ class CmdMap:
          returns self for chaining
         """
         addCmdCheckPreconds( cmd, callback, allowAbbrev)
+        cmd = str.lower(cmd)
         addCmdFromNextToken( self, cmd, callback, allowAbbrev )
         addCmdToList( self, cmd )
         return self
@@ -49,6 +50,8 @@ class CmdMap:
 
         if len(cmd) == 0:
             return (self.defaultCallback, None)
+
+        cmd = str.lower(cmd)
 
         result = findFromNextToken( self, cmd )
 
