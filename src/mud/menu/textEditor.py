@@ -4,8 +4,6 @@ from mud.core.prompt import pushPrompt, popPrompt
 from mud.core.cmds import pushCmdHandler, popCmdHandler
 from mud.parser.cmdMap import CmdMap
 
-prompt = "{!{FU<text editor>"
-
 class TextEditor:
 
     def __init__( self, clientId, nameOfEdit, initialText, submitCallback, invalidSelectionCallback = "DEFAULT" ):
@@ -39,7 +37,8 @@ class TextEditor:
         self.menu += endl
 
         _activate( clientId, self )
-        
+
+_prompt = "{!{FU<text editor>"
         
 def _addDisplay( editor ):
     editor.menu += " {FCt{FG) {FUdisplay text" + endl
@@ -54,7 +53,7 @@ def _defaultInvalidSelectionCallback( clientId, menu ):
 
 def _activate( clientId, textEditor ):
     pushCmdHandler( clientId, textEditor.cmdMap )
-    pushPrompt( clientId, lambda clientId: prompt )
+    pushPrompt( clientId, lambda clientId: _prompt )
     sendToClient( clientId, textEditor.menu )
 
 def _finish( clientId, textEditor ):

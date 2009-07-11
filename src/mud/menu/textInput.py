@@ -3,8 +3,6 @@ from mud.parser.cmdMap import CmdMap
 from mud.core.send import sendToClient
 from mud.core.cmds import pushCmdHandler, popCmdHandler
 
-
-
 prompt = "{!{FU<text input> "
 
 def submitText( clientId, submitCallback, text ):

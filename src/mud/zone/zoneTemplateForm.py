@@ -1,7 +1,9 @@
 from util import isDefined, endl
 from mud.menu.form import Form
+from mud.menu.textInput import getOneLine
 from mud.core.cmds import popCmdHandler
-from mud.core.prompt import popPrompt
+from mud.core.prompt import popPrompt, pushPrompt
+from mud.core.send import sendToClient
 
 def finishCallback( clientId, session, abort = False ):
 
@@ -34,7 +36,7 @@ class ZoneTemplateForm:
         
         menuItems = [
             title,
-            ( "Zone Name", lambda x:x, lambda clientId: self.zoneTemplate.name )
+            ( "Zone Name", lambda clientId: _editZoneName( clientId, self ), lambda clientId: self.zoneTemplate.name )
             ]
 
         self.form = Form( menuItems, lambda clientId, abort=False: finishCallback( clientId, session, abort ) )
@@ -42,3 +44,15 @@ class ZoneTemplateForm:
 
     def activate( self, clientId ):
         self.form.activate( clientId )
+
+def _editZoneNameCallback( clientId, zoneTemplateForm, zoneName ):
+    zoneTemplateForm.zoneTemplate.name = zoneName
+    popPrompt( clientId )
+    sendToClient( clientId, zoneTemplateForm.form.menu( clientId ) )
+
+def _editZoneName( clientId, zoneTemplateForm ):
+    getOneLine( clientId, lambda clientId, text: _editZoneNameCallback( clientId, zoneTemplateForm, text ) )
+    pushPrompt( clientId, lambda clientId: "{!{FB<input new name for %s>" % zoneTemplateForm.zoneTemplate.name )
+
+    
+    

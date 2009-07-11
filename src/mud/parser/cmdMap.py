@@ -51,9 +51,7 @@ class CmdMap:
         if len(cmd) == 0:
             return (self.defaultCallback, None)
 
-        cmd = str.lower(cmd)
-
-        result = findFromNextToken( self, cmd )
+        result = findFromNextToken( self, str.lower(cmd) )
 
         if result[0] == self.defaultCallback:
             return ( self.defaultCallback, cmd )
