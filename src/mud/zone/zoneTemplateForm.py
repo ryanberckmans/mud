@@ -30,7 +30,7 @@ class ZoneTemplateForm:
 
         title = endl + "{FYEditing "
         if zoneTemplate.id:
-            title += "Zone " + zoneTemplate.id
+            title += "Zone " + str(zoneTemplate.id)
         else:
             title += "New Zone"
         
