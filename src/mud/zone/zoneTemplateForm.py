@@ -52,7 +52,7 @@ def _editZoneNameCallback( clientId, zoneTemplateForm, zoneName ):
 
 def _editZoneName( clientId, zoneTemplateForm ):
     getOneLine( clientId, lambda clientId, text: _editZoneNameCallback( clientId, zoneTemplateForm, text ) )
-    pushPrompt( clientId, lambda clientId: "{!{FB<input new name for %s>" % zoneTemplateForm.zoneTemplate.name )
+    pushPrompt( clientId, lambda clientId: endl + "{!{FU<input new name for {FY%s{FU>" % zoneTemplateForm.zoneTemplate.name )
 
     
     

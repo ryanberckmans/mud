@@ -1,7 +1,19 @@
+from util import isInt
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 import mud.core.db as db
 
+
+def getZoneTemplate( templateId ):
+    assert isInt( templateId )
+
+    session = getSession()
+
+    zone = session.query(ZoneTemplate).filter(ZoneTemplate.id == templateId ).first()
+
+    session.close()
+
+    return zone
 
 def getSession():
     return _sessionFactory()

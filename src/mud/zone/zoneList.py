@@ -4,17 +4,22 @@ from mud.core.send import sendToClient
 from zoneTemplate import getSession, ZoneTemplate
 
 
-def zoneList( clientId, remaining ):
-    session = getSession()
-    zoneTemplates = session.query(ZoneTemplate).all()
+def zoneListCmd( clientId, remaining ):
+    zoneTemplates = zoneList()
 
     zones = "{!{FGZone Templates:{FC" + endl
     for zt in zoneTemplates:
         zones += " " + str(zt) + endl
 
-    session.close()
-
     sendToClient( clientId, zones )
     
-        
-rootCmdMap.addCmd( "zone list", zoneList )
+def zoneList():
+    session = getSession()
+    zoneTemplates = session.query(ZoneTemplate).all()
+    session.close()
+    return zoneTemplates
+
+rootCmdMap.addCmd( "zone list", zoneListCmd )
+
+
+
