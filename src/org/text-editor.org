@@ -1,0 +1,21 @@
+
+* text input
+** receives one line of text and returns it
+** prompt is just <text input>
+
+* text editor ops
+** append
+** insert line
+** delelete line
+** edit line
+** wipe
+** abort
+** finish
+** 
+
+* impl
+** modified form
+
+* use cases
+** 
+
