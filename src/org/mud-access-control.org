@@ -80,7 +80,6 @@
 *** who are groups assigned to?
 **** players
 **** mobs
-*** designed for linear growth use cases: group zone-13
 *** what sort of segregation do we want between groups of differing permanence, system/userland, rpg/tech, etc:
 **** e.g. purge-group, restart-group, god-level-5-group
 **** e.g. builder-group

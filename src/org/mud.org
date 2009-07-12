@@ -40,9 +40,11 @@
 ** TODO upgrade sqlalchemy
 ** DONE implement clientTracker
    CLOSED: [2009-06-30 Tue 23:39]
-** TODO update ValueSelector to permit invalidSelectionCallback=None
+** DONE update ValueSelector to permit invalidSelectionCallback=None
+   CLOSED: [2009-07-11 Sat 23:58]
 *** allows CmdMap to fail normally without explicitly throwing AbandonCallback
-** TODO make cmdMap case insensitive
+** DONE make cmdMap case insensitive
+   CLOSED: [2009-07-11 Sat 23:58]
 ** TODO fix cmdMap bug
 ** TODO allow prioritization of mods
 ** TODO switch cmds to clientTracker
@@ -56,22 +58,24 @@
 *** TODO implement tests for returned session object
 *** TODO impl db config mods for BETA, STATIC, and INSTANCE
 *** TODO write sql to bootstrap db to work with config
-** DONE change python-mode to correct version
-   CLOSED: [2009-06-29 Mon 23:24]
 ** TODO hardcoded groups, and mobs can't have groups                  :STORY:
 ** TODO mobs can have groups                                          :STORY:
 ** TODO commands exist and wrap callbacks in validation chain :STORY:TWISTED:
 ** TODO commands have list of allowed/denied groups           :STORY:TWISTED:
 ** DONE prompts
    CLOSED: [2009-07-02 Thu 23:28]
-** TODO fill-in-the-blanks form widget
-** TODO input string widget
+** DONE fill-in-the-blanks form widget
+   CLOSED: [2009-07-11 Sat 23:59]
+** DONE input string widget
+   CLOSED: [2009-07-11 Sat 23:59]
 ** DONE value selector
    CLOSED: [2009-07-02 Thu 23:28]
-** TODO zone templates, saving to db                                  :STORY:
+** DONE zone templates, saving to db                                  :STORY:
+   CLOSED: [2009-07-11 Sat 23:59]
 ** TODO zone deployments, saving to db, but no instances              :STORY:
 ** TODO zone deployments trigger, saving instances to db              :STORY:
-** TODO mob templates, saving to db                                   :STORY:
+** DONE mob templates, saving to db                                   :STORY:
+   CLOSED: [2009-07-11 Sat 23:59]
 ** TODO mob deployments, saving to db, but no instances               :STORY:
 ** TODO mob deployments trigger, saving instances to db               :STORY:
 ** TODO code mobs, where we have templates, and everything else is permanent :STORY:

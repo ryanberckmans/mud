@@ -1,0 +1,25 @@
+
+
+* attr
+** sname
+** lname
+** id - global unique
+** zone_id - optional owning zone
+
+* hierarchical id system
+** zone.mob.item
+** zone.mob.item.proc
+** zone.proc
+** zone.mob.proc
+** zone.room.proc
+** instead use flat ids:
+*** zone, room, proc, item id space
+*** support query-like search system to do same thing-ish
+*** zone search name blood
+*** mob search name foo
+*** mob search zone 19
+*** item search ..
+*** ... this gets complicated quickly.
+*** but supporting SQL-like queries, even raw SQL is much simpler than relative addresses
+*** could make a declarative API, like jquery: zone.id("53").mob("man").item("dagger") => shows all dagger items from mobs named man in zone 53
+*** can use python exec() to process raw python -> probably not, very unsafe
