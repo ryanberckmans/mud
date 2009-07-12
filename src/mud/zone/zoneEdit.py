@@ -23,7 +23,7 @@ def zoneEditCmd( clientId, remaining):
         _invalidZoneId( clientId, token )
 
     # ZoneTemplateSelector
-    pass
+    sendToClient( clientId, "ZoneTemplateSelector not impl" )
 
 def _invalidZoneId( clientId, token ):
     sendToClient( clientId, "Invalid zone id '%s'" % token )
