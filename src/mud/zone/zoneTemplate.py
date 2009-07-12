@@ -1,5 +1,4 @@
 from util import isInt
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 import mud.core.db as db
 
@@ -18,9 +17,7 @@ def getZoneTemplate( templateId ):
 def getSession():
     return _sessionFactory()
 
-_Base = declarative_base()
-
-class ZoneTemplate(_Base):
+class ZoneTemplate(db.getBase()):
     __tablename__ = 'zone_templates'
 
     id = Column( Integer, primary_key=True)
@@ -35,4 +32,4 @@ class ZoneTemplate(_Base):
 _DB_NAME = "WORLD"
 _DB_TYPE = "STATIC"
 
-_sessionFactory = db.getSessionFactory( _DB_NAME, _DB_TYPE, _Base )
+_sessionFactory = db.getSessionFactory( _DB_NAME, _DB_TYPE )

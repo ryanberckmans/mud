@@ -1,7 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
+from sqlalchemy.ext.declarative import declarative_base
 from util import isString, isDefined
+
+_Base = declarative_base()
+
+def getBase():
+    return _Base
 
 class DBMetaData:
     def __init__(self):
@@ -37,24 +42,22 @@ class DBMetaData:
 
 data = DBMetaData()
 
-def getSessionFactory( dbName, dbType, declarativeBase, metadata=data ):
+def getSessionFactory( dbName, dbType, metadata=data ):
     """
     returns an sqlalchemy sessionmaker, used to access an underlying data model, as described by declarativeBase
     e.g. s = session(), s.commit(), s.add(user)
 
     dbName         : string, the logical database name, e.g. 'MOB_DESCRIPTIONS'
     dbType         : string, the persistence type class, e.g. 'STATIC', 'INSTANCE'
-    declarativeBase: an instance of sqlalchemy.ext.declarative.declarative_base
     """
     assert isString( dbName )
     assert isString( dbType )
-    assert isDefined( declarativeBase )
 
     assert dbType in metadata.types
     
     dbActualName = "%s_%s_%s" % (metadata.prefix, metadata.types[ dbType ], dbName)
 
     engine = create_engine('mysql://muduser:mudpass@localhost/%s' % dbActualName )
-    declarativeBase.metadata.create_all(engine) 
+    _Base.metadata.create_all(engine) 
     
     return sessionmaker(bind=engine)

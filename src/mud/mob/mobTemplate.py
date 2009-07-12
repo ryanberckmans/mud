@@ -1,5 +1,4 @@
 from util import isInt
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 import mud.core.db as db
 
@@ -17,9 +16,7 @@ def getMobTemplate( templateId ):
 def getSession():
     return _sessionFactory()
 
-_Base = declarative_base()
-
-class MobTemplate(_Base):
+class MobTemplate(db.getBase()):
     __tablename__ = 'mob_templates'
 
     id = Column( Integer, primary_key=True)
@@ -31,9 +28,9 @@ class MobTemplate(_Base):
         self.lname = "an unnamed Mob"
 
     def __str__( self ):
-        return "mob %s, %s" % (self.id, self.sname )
+        return "mob template %s, %s" % (self.id, self.sname )
 
 _DB_NAME = "WORLD"
 _DB_TYPE = "STATIC"
 
-_sessionFactory = db.getSessionFactory( _DB_NAME, _DB_TYPE, _Base )
+_sessionFactory = db.getSessionFactory( _DB_NAME, _DB_TYPE )
