@@ -2,7 +2,6 @@
 * parsers/command classes
 ** builder commands
 ** basic mob commands, movement, etc
-** 
 
 * data chart
 
