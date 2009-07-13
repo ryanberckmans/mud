@@ -6,6 +6,8 @@
 ** mob.instances
 *** all mob instances currently in game
 *** ignorant of zone mob, pet, player, transient, etc
+** for now, all mobs simply have rootCmdMap
+** core.cmds
 
 * logon sequence
 ** connection
