@@ -1,5 +1,6 @@
 
 * logon sequence
+** connection
 ** 
 
 * parsers/command classes
