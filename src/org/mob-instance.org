@@ -4,10 +4,11 @@
 *** map of ( clientId, currentlyControlledMob )
 *** defined for all clientId
 *** responsible for loading or creating the mob a player should be controlling
-*** 
+*** who is responsible for saving/unloading a player's mobs when they quit?
+*** what about ll? should rebind to mob on reconnect, but this needs accounts
 ** mob.instances
 *** all mob instances currently in game
-*** ignorant of zone mob, pet, player, transient, etc
+*** ignorant of whether zone mob, pet, player, transient, etc
 ** for now, all mobs simply have rootCmdMap
 ** core.prompt, core.cmds goes to mob
 
