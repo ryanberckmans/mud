@@ -1,6 +1,10 @@
 
+* parsers/command classes
+** builder commands
+** basic mob commands, movement, etc
+** 
 
-
+* data chart
 
 |                  | can be set by dp | stored in mob instance | transient | /which data are stored in dp is unspecified atm/
 |------------------+------------------+------------------------+-----------|
