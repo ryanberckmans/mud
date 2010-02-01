@@ -12,6 +12,43 @@ def f( cmd ):
 def call( findResult):
     return findResult[0]()
 
+class TestCmdMapAbbrev(unittest.TestCase):
+    
+    def setUp(self):
+        self.map = cmdMap.CmdMap()
+        self.map.addCmd("cast", f("0"))
+        self.map.addCmd("cast fireball", f("10"))
+        self.map.addCmd("cast fireball room", f("20"))
+        self.map.addCmd("cast fireball rofl", f("30"))
+        self.map.addCmd("cast fireball roft", f("35"))
+        self.map.addCmd("cast fireball root", f("40"))
+        self.map.addCmd("cast fir tree", f("45"))
+        self.map.addCmd("cast fir roomz", f("50"))
+
+    def test_sanity(self):
+        self.assert_( call(self.map.find("cast")) == "0" )
+        self.assert_( call(self.map.find("cast fireball")) == "10" )
+        self.assert_( call(self.map.find("cast fireball room")) == "20" )
+        self.assert_( call(self.map.find("cast fireball rofl")) == "30" )
+        self.assert_( call(self.map.find("cast fireball roft")) == "35" )
+        self.assert_( call(self.map.find("cast fireball root")) == "40" )
+        self.assert_( call(self.map.find("cast fir tree")) == "45" )
+        self.assert_( call(self.map.find("cast fir roomz")) == "50" )
+
+    def test_abbrevSelectsCorrectCommand(self):
+        self.assert_( call(self.map.find("cast f")) == "10")
+        self.assert_( call(self.map.find("cast f r")) == "20")
+        self.assert_( call(self.map.find("cast f rof")) == "30")
+        self.assert_( call(self.map.find("cast f roft")) == "35")
+        self.assert_( call(self.map.find("cast fir roft")) == "35")
+        self.assert_( call(self.map.find("cast fir roomz")) == "50")
+        self.assert_( call(self.map.find("cast fir t t")) == "45")
+        self.assert_( call(self.map.find("cast f roomzd")) == "10")
+        self.assert_( call(self.map.find("cast fg roomz")) == "0")
+        
+
+        
+
 class TestCmdMapDefaultCallback(unittest.TestCase):
 
     def setUp(self):
