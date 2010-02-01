@@ -40,6 +40,7 @@ class TestCmdMapDefaultCallback(unittest.TestCase):
         self.assert_( call(self.map.find("")) == "default" )
         self.assert_( call(self.map.find("cast fiq")) == "default" )
         self.assert_( call(self.map.find("cast fireballl")) == "default" )
+        self.assert_( call(self.map.find("cast fireball")) == "quaz" )
 
 class TestCmdMap(unittest.TestCase):
     
