@@ -12,6 +12,53 @@ def f( cmd ):
 def call( findResult):
     return findResult[0]()
 
+
+class TestCmdMapNoAbbrevOneTokenCommand(unittest.TestCase):
+    # test completely redundant, but CmdMap doesn't support multitoken noabbrev cmds 2010.2.6
+    
+    def setUp(self):
+        self.map = cmdMap.CmdMap()
+        self.map.addCmd("cast", f("0"), False)
+
+    def test_sanity(self):
+        self.assert_( call(self.map.find("cast")) == "0" )
+
+    def test_noabbrevCharacterMismatchBailsCorrectly(self):
+        self.assert_( self.map.find("castd f roomzd")[0] == None) # mistake in 1st token
+        self.assert_( self.map.find("qcast")[0] == None) # mistake at begin of 1st
+        self.assert_( call(self.map.find("cast hfireball")) == "0") # correct invocation of cast
+ 
+class TestCmdMapNoAbbrev(unittest.TestCase):
+    
+    def setUp(self):
+        self.map = cmdMap.CmdMap()
+        self.map.addCmd("cast", f("0"), False)
+        self.map.addCmd("cast fireball", f("10"), False)
+        self.map.addCmd("cast fireball room", f("20"), False)
+        self.map.addCmd("cast fireball rofl", f("30"), False)
+        self.map.addCmd("cast fireball roft", f("35"), False)
+        self.map.addCmd("cast fireball root", f("40"), False)
+        self.map.addCmd("cast fir tree", f("45"), False)
+        self.map.addCmd("cast fir roomz", f("50"), False)
+
+    def test_sanity(self):
+        self.assert_( call(self.map.find("cast")) == "0" )
+        self.assert_( call(self.map.find("cast fireball")) == "10" )
+        self.assert_( call(self.map.find("cast fireball room")) == "20" )
+        self.assert_( call(self.map.find("cast fireball rofl")) == "30" )
+        self.assert_( call(self.map.find("cast fireball roft")) == "35" )
+        self.assert_( call(self.map.find("cast fireball root")) == "40" )
+        self.assert_( call(self.map.find("cast fir tree")) == "45" )
+        self.assert_( call(self.map.find("cast fir roomz")) == "50" )
+
+    def test_noabbrevCharacterMismatchBailsCorrectly(self):
+        self.assert_( self.map.find("castd f roomzd")[0] == None) # mistake in 1st token
+        self.assert_( call(self.map.find("cast fireballomg roomzd")) == "0") # mistake in 2nd
+        self.assert_( call(self.map.find("cast fireball roomz")) == "10") # mistake in 3rd
+        self.assert_( self.map.find("qcast")[0] == None) # mistake at begin of 1st
+        self.assert_( call(self.map.find("cast hfireball")) == "0") # mistake at begin of 2nd
+        self.assert_( call(self.map.find("cast fireball troom")) == "10") # mistake at begin 3rd
+
 class TestCmdMapAbbrev(unittest.TestCase):
     
     def setUp(self):
@@ -75,8 +122,8 @@ class TestCmdMapDefaultCallback(unittest.TestCase):
         self.map.addCmd( "cast fireball", f("quaz") )
         self.assert_(self.map.find("cast fireball") != None)
         self.assert_( call(self.map.find("")) == "default" )
-        self.assert_( call(self.map.find("cast fiq")) == "default" )
-        self.assert_( call(self.map.find("cast fireballl")) == "default" )
+        self.assert_( call(self.map.find("casts fiq")) == "default" )
+        self.assert_( call(self.map.find("zcast fireballl")) == "default" )
         self.assert_( call(self.map.find("cast fireball")) == "quaz" )
 
 class TestCmdMap(unittest.TestCase):

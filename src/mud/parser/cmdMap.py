@@ -53,7 +53,7 @@ class CmdMap:
 
         result = findFromNextToken( self, str.lower(cmd) )
 
-        if result[0] == self.defaultCallback:
+        if result == None:
             return ( self.defaultCallback, cmd )
 
         return result
@@ -157,14 +157,16 @@ def findFromNextToken( cmdMap, cmd):
         if char in cmdMap.possibleNext:
             cmdMap = cmdMap.possibleNext[ char ]
         else:
-            return (cmdMap.defaultCallback, None)
+            #print "char not found in map, this token will be data, returning None"
+            return None
 
     if len(cmdRemainingTokens) > 0 and cmdMap.nextTokenNode:
-        result = cmdMap.nextTokenNode.find( cmdRemainingTokens )
+        result = findFromNextToken( cmdMap.nextTokenNode, cmdRemainingTokens )
         if result: return result
 
+    #print "result was none"
     if not cmdMap.allowAbbrev:
-        return (cmdMap.defaultCallback, None)
+        return None
 
     assert cmdMap.callback, "CmdMap.find found a match with a null callback"
 
