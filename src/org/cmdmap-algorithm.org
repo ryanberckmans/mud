@@ -1,0 +1,29 @@
+
+* problem:
+** find matches tokens greedily
+** current behaviour:
+*** a character mismatch in a token causes the default callback to be returned
+** correct behaviour:
+*** a character mismatch in a token causes the token to be become the first token of unmatched, remaining
+*** if the character mismatch occurs in the first token, the string will not match any of the commands in the map. only in this case do we return the default callback.
+
+* current algorithm
+
+(callback, remaining) find(cmd)
+  check cmd string, len > 0
+  result = findFromNextToken( str.lower(cmd) ) # likely where speech gets converted into lower
+  if result None, set result defaultCallback
+  return result
+
+(callback, remaining) findFromNextToken( cmdMap, cmd )
+  pop first token off cmd
+  confirm characters of first token in map
+  return None if a char not in map, indicating this token and all following it are data
+  if cmd has more tokens, recursively call findFromNextToken, to check if tokens are cmd or data
+  if result from recursion is not none, a command was matched further down so return it
+  if result from recursion is None, all remaining tokens are data, so return this tokens' callback
+
+  
+
+  
+* need to fix the lowercase/uppercase/str.lower(cmd) problem
