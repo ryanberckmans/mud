@@ -26,31 +26,31 @@ def handleCmd( client, cmd, polymorphicVariable):
             return
 
         if cmdMap.isCmdMap(polymorphicVariable[0]):
-            handleCmdFromMaps( cmd, client, polymorphicVariable)
+            _handleCmdFromMaps( cmd, client, polymorphicVariable)
         else:
             assert type(polymorphicVariable[0]) == FunctionType, "parser.handler.handleCmd received a list and it did not contain CmdMaps or functions"
-            handleCmdFromAccessors( cmd, client, polymorphicVariable)
+            _handleCmdFromAccessors( cmd, client, polymorphicVariable)
 
     else:
         if cmdMap.isCmdMap(polymorphicVariable):
-            handleCmdFromMaps( cmd, client, [polymorphicVariable])
+            _handleCmdFromMaps( cmd, client, [polymorphicVariable])
         else:
             assert type(polymorphicVariable) == FunctionType, "parser.handler.handleCmd received a single object and it wasn't a CmdMap or function"
-            handleCmdFromAccessor( cmd, client, polymorphicVariable)
+            _handleCmdFromAccessor( cmd, client, polymorphicVariable)
             
 
 ###################################
 ## Internal #######################
 ###################################
 
-def handleCmdFromAccessor( cmd, client, cmdMapAccessor):
-    handleCmdFromMaps( cmd, client, [cmdMapAccessor( client )] )
+def _handleCmdFromAccessor( cmd, client, cmdMapAccessor):
+    _handleCmdFromMaps( cmd, client, [cmdMapAccessor( client )] )
 
-def handleCmdFromAccessors( cmd, client, cmdMapAccessors ):
+def _handleCmdFromAccessors( cmd, client, cmdMapAccessors ):
     cmdMaps = map( lambda x: x( client ), cmdMapAccessors )
-    handleCmdFromMaps( cmdMaps )
+    _handleCmdFromMaps( cmdMaps )
 
-def handleCmdFromMaps( cmd, client, cmdMaps ):
+def _handleCmdFromMaps( cmd, client, cmdMaps ):
     abandonedCallback = None
 
     for cm in cmdMaps:

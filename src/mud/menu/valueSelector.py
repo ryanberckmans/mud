@@ -53,7 +53,7 @@ class ValueSelector:
                 self.menu += item + endl
                 continue
 
-            assert isTuple( item ) # item wasn't tuple or string
+            assert isTuple( item ) # item wasn't string
             assert len( item ) == 2
 
             ( itemDesc, itemValue ) = item
