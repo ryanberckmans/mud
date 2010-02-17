@@ -7,11 +7,12 @@
 ** display text
 ** append
 ** insert line
-** delelete line
+** delete line
 ** edit line
 ** wipe
 ** abort
 ** finish
+** justify text
 ** 
 
 * impl
