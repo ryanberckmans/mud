@@ -5,7 +5,7 @@ from mud.core.cmds import popCmdHandler
 from mud.core.prompt import popPrompt, pushPrompt
 from mud.core.send import sendToClient
 
-def finishCallback( clientId, session, abort = False ):
+def _finishCallback( clientId, session, abort = False ):
 
     if ( abort ):
         session.rollback()
@@ -39,8 +39,7 @@ class MobTemplateForm:
             ( "mob short name", lambda clientId: _editMobShortName( clientId, self ), lambda clientId: self.mobTemplate.sname )
             ]
 
-        self.form = Form( menuItems, lambda clientId, abort=False: finishCallback( clientId, session, abort ) )
-        self.form.prompt = endl + "{!{FB<select an option>"
+        self.form = Form( menuItems, lambda clientId, abort=False: _finishCallback( clientId, session, abort ) )
 
     def activate( self, clientId ):
         self.form.activate( clientId )

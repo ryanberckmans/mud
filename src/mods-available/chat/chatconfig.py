@@ -28,7 +28,6 @@ def finishCallback( clientId, abort = False ):
     popPrompt( clientId )
 
 form = Form( menuItems, finishCallback )
-form.prompt = endl + "{!{FB<select an option>"
 menu = form.menu
 
 rootCmdMap.addCmd( "config chat", lambda clientId, remaining: form.activate( clientId ) )

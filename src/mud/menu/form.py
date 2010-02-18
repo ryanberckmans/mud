@@ -31,7 +31,7 @@ class Form:
         assert len(menuItems) > 0
 
         self.menuItems = menuItems
-        self.prompt = ""
+        self.prompt = "{!{FB<options: "
         self.cmdMap = CmdMap( invalidSelectionCallback )
         self.alphabeticOptions = alphabeticOptions
 
@@ -57,8 +57,11 @@ class Form:
                 itemLabel = chr(96 + menuIndex )
 
             self.cmdMap.addCmd( "%s" % itemLabel, lambda clientId, remaining: itemSelectedFunc( clientId ) )
+            self.prompt += "{FC%s{FB, " % itemLabel
             
             menuIndex += 1
+
+        self.prompt += "{FCa{FB, {FCf{FB> " 
 
     def menu( self, clientId ):
         menu = "{!"
@@ -87,8 +90,8 @@ class Form:
 
             menuIndex += 1
 
-        menu += " {FCf{FG) finish " + endl
         menu += " {FCa{FG) abort " + endl
+        menu += " {FCf{FG) finish " + endl
 
         return menu
 

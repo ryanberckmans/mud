@@ -5,7 +5,7 @@ from mud.core.cmds import pushCmdHandler, popCmdHandler
 
 prompt = "{!{FU<text input> "
 
-def submitText( clientId, submitCallback, text ):
+def _submitText( clientId, submitCallback, text ):
     assert isFunc( submitCallback)
     assert isString( text )
     
@@ -23,4 +23,4 @@ def getOneLine( clientId, submitCallback ):
     assert isInt( clientId )
     assert isFunc( submitCallback)
 
-    pushCmdHandler( clientId, CmdMap( lambda x, remaining: submitText( x, submitCallback, remaining ) ) )
+    pushCmdHandler( clientId, CmdMap( lambda x, remaining: _submitText( x, submitCallback, remaining ) ) )
