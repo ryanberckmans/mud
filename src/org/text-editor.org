@@ -13,11 +13,51 @@
 ** abort
 ** finish
 ** justify text
-** 
+** display original text as it will look if aborted
 
 * impl
 ** modified form
+** impl edit in progress as collection of lines:
+*** pros:
+**** edit specific line is easy
+*** cons:
+**** need to convert to/from string when initializing/finishing the edit
+**** existing justification algorithms likely take string
+*** should go with collection of lines
+** TextEditor object manages text data structure and text editor operations
+** text editor mode/interface/menu handles the selections/IO/abort/finish
+** TextEditor and mode are transient
+*** edits in progress are lost on crash
+*** finishing saves the edit to a string, which may or may not be transient
+*** i.e., let someone else handle persistence
 
 * use cases
-** 
+** oneliner such as name of room or short-name
+** room description
+** simple essay
+** ascii art
+*** display should convert color codes, but editing should allow you to change color codes??
+*** maybe toggle color code viewing on/off
+** paste block of text from internet and edit from there
+** urls, bullet points, special characters
+
+* scratch
+
+_Buffer
+
+init( string )
+
+text()
+
+string line( int )
+
+void replaceLine( int, string )
+
+void deleteLine( int )
+
+void wipe()
+
+void appendLine( string )
+
+<display, append, edit line, ?, abort, finish>
 

@@ -1,4 +1,4 @@
--from util import isFunc, isString, isDefined, endl
+from util import isFunc, isString, isDefined, endl
 from mud.core.send import sendToClient
 from mud.core.prompt import pushPrompt, popPrompt
 from mud.core.cmds import pushCmdHandler, popCmdHandler
