@@ -41,22 +41,20 @@
 ** paste block of text from internet and edit from there
 ** urls, bullet points, special characters
 
+
+* tests
+** appendLine("not-epsilon") && wipe == epsilon
+** appendLine("abc") && lines( numLines ) == "abc"
+
 * scratch
 
 _Buffer
-
 init( string )
-
 text()
-
 string line( int )
-
 void replaceLine( int, string )
-
 void deleteLine( int )
-
 void wipe()
-
 void appendLine( string )
 
 <display, append, edit line, ?, abort, finish>

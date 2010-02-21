@@ -65,3 +65,13 @@ def _displayText( clientId, textEditor ):
     sendToClient( clientId, textEditor.text + endl + textEditor.menu )
 
 
+class _Buffer:
+
+    def __init__( self, initialText):
+
+        self.lines = []
+        
+        if initialText: _stringToLines( initialText )
+
+    def _stringToLines( self, initialText):
+        pass
