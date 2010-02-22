@@ -1,4 +1,4 @@
--from util import isFunc, isString, isDefined, endl
+from util import isFunc, isString, isDefined, endl
 from mud.core.send import sendToClient
 from mud.core.prompt import pushPrompt, popPrompt
 from mud.core.cmds import pushCmdHandler, popCmdHandler
@@ -65,3 +65,13 @@ def _displayText( clientId, textEditor ):
     sendToClient( clientId, textEditor.text + endl + textEditor.menu )
 
 
+class _Buffer:
+
+    def __init__( self, initialText):
+
+        self.lines = []
+        
+        if initialText: _stringToLines( initialText )
+
+    def _stringToLines( self, initialText):
+        pass
