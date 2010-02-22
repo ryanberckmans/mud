@@ -1,4 +1,9 @@
 
+
+* rollbacks
+** for reboot-transient state which require rollback/transactional functionality, use SQLAlchemy with inmemory db
+** use sqlalchemy for the body of text and form finish/abort
+
 * text input
 ** receives one line of text and returns it
 ** prompt is just <text input>
