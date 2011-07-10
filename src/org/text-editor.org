@@ -50,6 +50,11 @@
 * tests
 ** appendLine("not-epsilon") && wipe == epsilon
 ** appendLine("abc") && lines( numLines ) == "abc"
+** deleteLine( numLines ), numLines() == numLines - 1
+** append a, b, c, deleteLine 1 == a, 2 == b, 3 == c, check line() too
+** text() == line( 1:numlines)
+** appendLine string contains a newline??
+
 
 * scratch
 
@@ -61,6 +66,7 @@ void replaceLine( int, string )
 void deleteLine( int )
 void wipe()
 void appendLine( string )
+int numLines()
 
 <display, append, edit line, ?, abort, finish>
 

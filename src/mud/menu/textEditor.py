@@ -67,11 +67,18 @@ def _displayText( clientId, textEditor ):
 
 class _Buffer:
 
-    def __init__( self, initialText):
+    def __init__( self, initialText=None):
 
         self.lines = []
         
-        if initialText: _stringToLines( initialText )
+        if initialText:
+            _stringToLines( initialText )
+
+    def wipe( self ):
+        self.lines = []
+
+    def appendLine( self, string ):
+        pass
 
     def _stringToLines( self, initialText):
         pass
