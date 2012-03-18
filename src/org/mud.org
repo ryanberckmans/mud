@@ -109,7 +109,7 @@
 **** xmlrpc supports only basic datatypes, so features requiring tossing around complex data types shouldn't be mods.
 **** features with many upstreams can be mods, but then they may not be upstreams
 ***** e.g. combat could be a mod, but it relies on equip, spell affects, etc, and how do we know something won't rely on combat?
-
+      
 * migrating away from root c++
 ** why?
 *** twistd
